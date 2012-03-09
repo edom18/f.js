@@ -194,12 +194,108 @@ EventDispatcher.prototype = (function() {
     };
 }());
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Model of MVC
+ * @name Model
+ * @param attr {Object} default settings.
+ * @param opt {Object} use to initialize.
+ */
+function Model(attr, opt) {
+
+    this.init.apply(this, arguments);
+}
+
+copyClone(Model.prototype, EventDispatcher.prototype, {
+    init: function (attr, opt) {
+
+        var attribute = ($.isPlainObject(attr)) ? attr : {};
+
+        //copy attribute.
+        $.extend(this, attribute);
+
+        //setting defaults.
+        this.id = (attribute.id) ? attribute.id : modelIdBase + (++modelIdIndex);
+        this.defaults = (attribute.defaults) ? attribute.defaults : {};
+        this._event = $({});
+
+        if ($.isFunction(attribute.initialize)) {
+            attribute.initialize.apply(this, opt);
+        }
+    },
+    set: function (name, val) {
+    
+        this.store[name] = val;
+        this.trigger('change');
+    },
+    get: function (name) {
+    
+        return this.store[name];
+    }
+});
+
+/**
+ * View of MVC
+ * @name View
+ * @param attr {Object} default settings.
+ * @param opt {Object} use to initialize.
+ */
+function View(attr, opt) {
+
+    this.init.apply(this, arguments);
+}
+
+copyClone(View.prototype, EventDispatcher.prototype, {
+    init: function (attr, opt) {
+
+        var attribute = ($.isPlainObject(attr)) ? attr : {},
+            tmp;
+
+        //copy attribute.
+        $.extend(this, attribute);
+
+        //setting defaults.
+        this.id = (attribute.id) ? attribute.id : modelIdBase + (++modelIdIndex);
+        this._event = $({});
+        this.events = ($.isPlainObject(attribute.events)) ? attribute.events : {};
+
+        for (var key in this.events) {
+            tmp = key.replace(/ +/g, ' ').split(' ');
+            $(this.el).delegate(tmp[1], tmp[0], $.proxy(this[this.events[key]], this));
+        }
+
+        //initialize call
+        if ($.isFunction(attribute.initialize)) {
+            attribute.initialize.apply(this, opt);
+        }
+    },
+    bind: function (eventName, func) {
+    
+        this._event.bind(eventName, func);
+    },
+    unbind: function (eventName, func) {
+
+        this._event.unbind(eventName, func);
+    },
+    trigger: function (eventName) {
+    
+        this._event.trigger(eventName);
+    }
+});
+
+Model.extend = View.extend = extend;
+
 /* --------------------------------------------------------------------
     EXPORT
 ----------------------------------------------------------------------- */
 //for utils
 f.utils.extend    = extend;
 f.utils.copyClone = copyClone;
+
+//for MVC
+f.Model = Model;
+f.View  = View;
 
 //for events
 f.events.EventDispatcher = EventDispatcher;
