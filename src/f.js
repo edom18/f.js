@@ -269,18 +269,6 @@ copyClone(View.prototype, EventDispatcher.prototype, {
         if ($.isFunction(attribute.initialize)) {
             attribute.initialize.apply(this, opt);
         }
-    },
-    bind: function (eventName, func) {
-    
-        this._event.bind(eventName, func);
-    },
-    unbind: function (eventName, func) {
-
-        this._event.unbind(eventName, func);
-    },
-    trigger: function (eventName) {
-    
-        this._event.trigger(eventName);
     }
 });
 
