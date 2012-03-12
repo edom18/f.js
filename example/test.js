@@ -1,27 +1,28 @@
 (function (f) {
 
-    var utils = f.utils;
+    var utils = f.utils,
+        Model = f.Model,
+        View  = f.View;
 
-    var Test = function () {};
+    var Model1 = Model.extend({
+        defaults: {
+            hoge: 'hoge'
+        },
+        initialize: function () {
 
-    Test.prototype = {
-        foo: 'foo'
-    };
-
-    utils.copyClone(Test.prototype, f.events.EventDispatcher.prototype);
-
-    Test.extend = utils.extend;
-
-    var Test2 = Test.extend({
-        hoge: 'hoge'
+            this.on('change', function (e, data) {
+            
+                console.log(e, data);
+            }, this);
+        }
     });
 
-    var test2 = new Test2();
+    var model = new Model1();
 
-    test2.on('test', function () {
-
-        console.log(this);
-    }, window);
-
-    test2.trigger('test');
+    model.set({
+        'edo': 'word'
+    });
+    model.set({
+        'edo': 'word2'
+    });
 }(f));

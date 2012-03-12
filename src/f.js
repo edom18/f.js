@@ -8,12 +8,26 @@
  * @author   Kazuya Hiruma (http://css-eblog.com/)
  * @version  0.2.0
  * @github   https://github.com/edom18/f.js
+ * @require jQuery
  *
  */
 
 (function (win, doc, exports) {
 
 'use strict';
+
+/* ---------------------------------------------------------------
+   EXTEND BUILTIN OBJECTS
+------------------------------------------------------------------ */
+if (typeof Object.create !== 'function') {
+    Object.create = function (o) {
+
+        function F() {}
+        F.prototype = o;
+
+        return new F();
+    };
+}
 
 /**
  * @namespace
@@ -131,13 +145,13 @@ EventDispatcher.prototype = (function() {
         
         // handle specified event type
         for (i = 0, len = arr.length; i < len; ++i) {
-            (fnc = arr[i][0]) && fnc.call(arr[i][1] || this, evt);
+            (fnc = arr[i][0]) && fnc.call(arr[i][1] || this, this, evt);
         }
         
         // handle wildcard "*" event
         arr  = obj["*"] || [];
         for (i = 0, len = arr.length; i < len; ++i) {
-            (fnc = arr[i]) && fnc.call(this, evt);
+            (fnc = arr[i][0]) && fnc.call(arr[i][1] || this, this, evt);
         }
     }
 
@@ -155,7 +169,7 @@ EventDispatcher.prototype = (function() {
         
         var obj = this.handlers || (this.handlers = {});
         
-        ( obj[typ] || (obj[typ] = []) ).push([fnc, context]);
+        (obj[typ] || (obj[typ] = [])).push([fnc, context]);
     }
     /**
      *  @param {string} typ
@@ -196,6 +210,9 @@ EventDispatcher.prototype = (function() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+var modelIdBase = 'id',
+    modelIdIndex = 0;
+
 /**
  * Model of MVC
  * @name Model
@@ -207,6 +224,7 @@ function Model(attr, opt) {
     this.init.apply(this, arguments);
 }
 
+//defien Model.prototype by EventDispatcher and more.
 copyClone(Model.prototype, EventDispatcher.prototype, {
     init: function (attr, opt) {
 
@@ -217,21 +235,81 @@ copyClone(Model.prototype, EventDispatcher.prototype, {
 
         //setting defaults.
         this.id = (attribute.id) ? attribute.id : modelIdBase + (++modelIdIndex);
-        this.defaults = (attribute.defaults) ? attribute.defaults : {};
-        this._event = $({});
+        (this.defaults) || (this.defaults = {});
 
-        if ($.isFunction(attribute.initialize)) {
-            attribute.initialize.apply(this, opt);
+        //create placeholder
+        this._previousAttributes = null;
+
+        //called `initialize` function if that exist on attributes.
+        if ($.isFunction(this.initialize)) {
+            this.initialize.apply(this, arguments);
         }
+    },
+
+    /**
+     * @returns {Boolean} has been changed as true.
+     */
+    hasChanged: function () {
+    
+        return !!this._changed;
+    },
+
+    /**
+     * change attributes
+     */
+    change: function () {
+
+        //fired `change` event that takes changed object.
+        this.trigger('change', this._changed);
+
+        //copy `this.attributes` to `this._previousAttributes`.
+        this._previousAttributes = copyClone({}, this.attributes);
+
+        //delete changed object.
+        this._changed = null;
+        delete this._changed;
     },
     set: function (name, val) {
     
-        this.store[name] = val;
-        this.trigger('change');
+        var attr, attrs,
+            attributes = (this.attributes || (this.attributes = {}));
+
+        this._changed || (this._changed = {});
+
+        if ($.isPlainObject(name)) {
+            attrs = name;
+        }
+        else {
+            attrs = {};
+            attrs[name] = val;
+        }
+
+        for (attr in attrs) {
+            if (attributes[attr] === attrs[attr]) {
+                continue;
+            }
+            attributes[attr] = attrs[attr];
+            this._changed[attr] = attrs[attr];
+        }
+
+        if (this.hasChanged()) {
+            this.change();
+        }
+    },
+    previous: function (attr) {
+
+        if (!arguments.length || !this._previousAttributes) {
+            return null;
+        }
+        return this._previousAttributes[attr];
+    },
+    previousAttributes: function () {
+    
+        return copyClone({}, this._previousAttributes);
     },
     get: function (name) {
     
-        return this.store[name];
+        return this.attributes[name];
     }
 });
 
@@ -246,6 +324,7 @@ function View(attr, opt) {
     this.init.apply(this, arguments);
 }
 
+//defien View.prototype by EventDispatcher and more.
 copyClone(View.prototype, EventDispatcher.prototype, {
     init: function (attr, opt) {
 
