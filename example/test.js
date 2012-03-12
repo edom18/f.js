@@ -10,10 +10,6 @@
         },
         initialize: function () {
 
-            this.on('change', function (e, data) {
-            
-                console.log(e, data);
-            }, this);
         }
     });
 
@@ -24,5 +20,28 @@
     });
     model.set({
         'edo': 'word2'
+    });
+
+    var View1 = View.extend({
+        events: {
+            'click .test1': '_onClick',
+            'mouseover .test3 .test31': '_onMouseover'
+        },
+        initialize: function () {
+
+            console.log(this);
+        },
+        _onClick: function () {
+
+            alert('clicked');
+        },
+        _onMouseover: function () {
+
+            console.log('mouseover');
+        }
+    });
+
+    var view = new View1({
+        el: $('#hoge')
     });
 }(f));

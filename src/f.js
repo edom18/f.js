@@ -118,7 +118,6 @@ function extend(protoProps, classProps) {
 
 /**
  *  EventDispatcher
- *  
  *  @constructor
  */
 function EventDispatcher() {}
@@ -224,6 +223,9 @@ function Model(attr, opt) {
     this.init.apply(this, arguments);
 }
 
+//shortcut to prototype.
+Model.fn = Model.prototype;
+
 //defien Model.prototype by EventDispatcher and more.
 copyClone(Model.prototype, EventDispatcher.prototype, {
     init: function (attr, opt) {
@@ -324,30 +326,58 @@ function View(attr, opt) {
     this.init.apply(this, arguments);
 }
 
+//shortcut to prototype.
+View.fn = View.prototype;
+
 //defien View.prototype by EventDispatcher and more.
 copyClone(View.prototype, EventDispatcher.prototype, {
+    tagName: 'div',
     init: function (attr, opt) {
 
         var attribute = ($.isPlainObject(attr)) ? attr : {},
-            tmp;
+            selector, eventName, key, method, tmp;
 
         //copy attribute.
         $.extend(this, attribute);
 
         //setting defaults.
         this.id = (attribute.id) ? attribute.id : modelIdBase + (++modelIdIndex);
-        this._event = $({});
-        this.events = ($.isPlainObject(attribute.events)) ? attribute.events : {};
+        this.events || (this.events = $.isPlainObject(attribute.events) ? attribute.events : {});
 
-        for (var key in this.events) {
-            tmp = key.replace(/ +/g, ' ').split(' ');
-            $(this.el).delegate(tmp[1], tmp[0], $.proxy(this[this.events[key]], this));
+        this.setElement();
+
+        for (key in this.events) {
+            tmp = key.match(/^(\S+)\s*(.*)$/);
+            eventName = tmp[1];
+            selector = tmp[2];
+            method = this.events[key];
+            ($.isFunction(method)) || (method = this[this.events[key]]);
+            this.$el.delegate(selector, eventName, $.proxy(method, this));
         }
 
         //initialize call
-        if ($.isFunction(attribute.initialize)) {
-            attribute.initialize.apply(this, opt);
+        if ($.isFunction(this.initialize)) {
+            this.initialize.apply(this, opt);
         }
+    },
+    $: function(selector) {
+
+        return this.$el.find(selector);
+    },
+    setElement: function(el, delegate) {
+
+        this.$el = $(el);
+        this.el = this.$el[0];
+
+        if (delegate !== false) {
+            this.delegateEvents();
+        }
+
+        return this;
+    },
+    render: function () {
+    
+        return this;
     }
 });
 
