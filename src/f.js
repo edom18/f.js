@@ -344,7 +344,7 @@ copyClone(View.prototype, EventDispatcher.prototype, {
         this.id = (attribute.id) ? attribute.id : modelIdBase + (++modelIdIndex);
         this.events || (this.events = $.isPlainObject(attribute.events) ? attribute.events : {});
 
-        this.setElement();
+        this.setElement(attribute.el, false);
 
         for (key in this.events) {
             tmp = key.match(/^(\S+)\s*(.*)$/);
@@ -360,6 +360,11 @@ copyClone(View.prototype, EventDispatcher.prototype, {
             this.initialize.apply(this, opt);
         }
     },
+
+    /**
+     * Abstruct function.
+     */
+    initialize: function () {},
     $: function(selector) {
 
         return this.$el.find(selector);
@@ -370,7 +375,7 @@ copyClone(View.prototype, EventDispatcher.prototype, {
         this.el = this.$el[0];
 
         if (delegate !== false) {
-            this.delegateEvents();
+            //this.delegateEvents();
         }
 
         return this;
