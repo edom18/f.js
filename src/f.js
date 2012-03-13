@@ -363,18 +363,17 @@ View.fn = View.prototype;
 //defien View.prototype by EventDispatcher and more.
 copyClone(View.prototype, EventDispatcher.prototype, {
     tagName: 'div',
+    className: '',
     init: function (attr, opt) {
 
         var elem,
             attribute = ($.isPlainObject(attr)) ? attr : {},
             selector, eventName, key, method, tmp;
 
-        //copy attribute.
-        $.extend(this, attribute);
-
         //setting defaults.
         this.id = (attribute.id) ? attribute.id : modelIdBase + (++modelIdIndex);
         this.events || (this.events = $.isPlainObject(attribute.events) ? attribute.events : {});
+        copyClone(this, attribute);
 
         if (!this.el) {
             elem = document.createElement(this.tagName);
