@@ -46,6 +46,7 @@ module('utilities test');
 test('isEmpty test', function () {
 
     var isEmpty = f.utils.isEmpty;
+
     var test1 = '',
         test2 = [],
         test3 = {},
@@ -69,4 +70,17 @@ test('isEmpty test', function () {
     QUnit.deepEqual(false, isEmpty(test9), 'as function');
     QUnit.deepEqual(false, isEmpty(test10), 'as null');
     QUnit.deepEqual(false, isEmpty(test11), 'as undefiend');
+});
+
+test('hasProp test', function () {
+
+    var hasProp = f.utils.hasProp;
+    var test1 = {
+        hoge: 'hoge',
+        foo: 'foo'
+    };
+
+    QUnit.deepEqual(true, hasProp(test1, 'hoge'), 'has "hoge" property');
+    QUnit.deepEqual(true, hasProp(test1, 'foo'), 'has "foo" property');
+    QUnit.deepEqual(false, hasProp(test1, 'fuga'), 'not has "fuga" property');
 });

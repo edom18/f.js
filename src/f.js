@@ -39,6 +39,10 @@ var f = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+function hasProp(obj, prop) {
+
+    return Object.prototype.hasOwnProperty.call(obj, prop);
+}
 
 function isEmpty(obj) {
 
@@ -439,6 +443,7 @@ Model.extend = View.extend = extend;
 f.utils.extend    = extend;
 f.utils.copyClone = copyClone;
 f.utils.isEmpty   = isEmpty;
+f.utils.hasProp   = hasProp;
 
 //for MVC
 f.Model = Model;
