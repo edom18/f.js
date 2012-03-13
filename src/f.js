@@ -12,7 +12,7 @@
  *
  */
 
-(function (win, doc, exports) {
+(function (win, doc, exports, undefined) {
 
 'use strict';
 
@@ -47,11 +47,17 @@ function isEmpty(obj) {
     if (Object.prototype.toString.call(obj) === '[object Function]') {
         return false;
     }
-    if (
+    else if (
         Object.prototype.toString.call(obj) === '[object Array]' ||
         Object.prototype.toString.call(obj) === '[object String]'
        ) {
            return obj.length === 0;
+    }
+    else if (obj === null) {
+        return false;
+    }
+    else if (obj === undefined) {
+        return false;
     }
 
     for (key in obj) if (obj.hasOwnProperty(key)) {
