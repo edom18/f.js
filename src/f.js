@@ -232,15 +232,19 @@ copyClone(Model.prototype, EventDispatcher.prototype, {
 
         var attribute = ($.isPlainObject(attr)) ? attr : {};
 
-        //copy attribute.
-        $.extend(this, attribute);
-
-        //setting defaults.
+        //setting this model's id.
         this.id = (attribute.id) ? attribute.id : modelIdBase + (++modelIdIndex);
-        (this.defaults) || (this.defaults = {});
 
-        //create placeholder
-        this._previousAttributes = null;
+        if (this.defaults) {
+            copyClone(attribute, this.defaults);
+        }
+
+        //set data by defaults and argumetns.
+        this.set(attribute, {silent: true});
+
+
+        //copy to `_previousAttributes` current attributes.
+        this._previousAttributes = copyClone({}, this.attributes);
 
         //called `initialize` function if that exist on attributes.
         if ($.isFunction(this.initialize)) {
@@ -259,10 +263,14 @@ copyClone(Model.prototype, EventDispatcher.prototype, {
     /**
      * change attributes
      */
-    change: function () {
+    change: function (options) {
+
+        options || (options = {});
 
         //fired `change` event that takes changed object.
-        this.trigger('change', this._changed);
+        if (!options.silent) {
+            this.trigger('change', this._changed);
+        }
 
         //copy `this.attributes` to `this._previousAttributes`.
         this._previousAttributes = copyClone({}, this.attributes);
@@ -271,7 +279,7 @@ copyClone(Model.prototype, EventDispatcher.prototype, {
         this._changed = null;
         delete this._changed;
     },
-    set: function (name, val) {
+    set: function (name, val, options) {
     
         var attr, attrs,
             attributes = (this.attributes || (this.attributes = {}));
@@ -280,6 +288,7 @@ copyClone(Model.prototype, EventDispatcher.prototype, {
 
         if ($.isPlainObject(name)) {
             attrs = name;
+            options = val;
         }
         else {
             attrs = {};
@@ -295,7 +304,7 @@ copyClone(Model.prototype, EventDispatcher.prototype, {
         }
 
         if (this.hasChanged()) {
-            this.change();
+            this.change(options);
         }
     },
     previous: function (attr) {
@@ -334,7 +343,8 @@ copyClone(View.prototype, EventDispatcher.prototype, {
     tagName: 'div',
     init: function (attr, opt) {
 
-        var attribute = ($.isPlainObject(attr)) ? attr : {},
+        var elem,
+            attribute = ($.isPlainObject(attr)) ? attr : {},
             selector, eventName, key, method, tmp;
 
         //copy attribute.
@@ -344,7 +354,14 @@ copyClone(View.prototype, EventDispatcher.prototype, {
         this.id = (attribute.id) ? attribute.id : modelIdBase + (++modelIdIndex);
         this.events || (this.events = $.isPlainObject(attribute.events) ? attribute.events : {});
 
-        this.setElement(attribute.el, false);
+        if (!this.el) {
+            elem = document.createElement(this.tagName);
+            $(elem).addClass(this.className);
+            this.setElement(elem, false);
+        }
+        else {
+            this.setElement(attribute.el, false);
+        }
 
         for (key in this.events) {
             tmp = key.match(/^(\S+)\s*(.*)$/);

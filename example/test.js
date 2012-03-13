@@ -4,7 +4,7 @@ var utils = f.utils,
 
 var Model1 = Model.extend({
     defaults: {
-        hoge: 'hoge'
+        hoge: 'hogehoge'
     },
     initialize: function () {
 
@@ -39,10 +39,7 @@ var View1 = View.extend({
 });
 
 var view = new View1({
-    el: $('#hoge'),
     model: model
 });
 
-model.set({
-    edo: 'word'
-});
+console.log(model);
