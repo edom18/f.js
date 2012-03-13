@@ -39,6 +39,28 @@ var f = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+function isEmpty(obj) {
+
+    var key;
+
+    if (Object.prototype.toString.call(obj) === '[object Function]') {
+        return false;
+    }
+    if (
+        Object.prototype.toString.call(obj) === '[object Array]' ||
+        Object.prototype.toString.call(obj) === '[object String]'
+       ) {
+           return obj.length === 0;
+    }
+
+    for (key in obj) if (obj.hasOwnProperty(key)) {
+        return false;
+    }
+
+    return true;
+}
+
 /**
  * copy arguments object properties to `obj`
  * @param {Object} obj base to be copy of properties.
@@ -411,6 +433,7 @@ Model.extend = View.extend = extend;
 //for utils
 f.utils.extend    = extend;
 f.utils.copyClone = copyClone;
+f.utils.isEmpty   = isEmpty;
 
 //for MVC
 f.Model = Model;
