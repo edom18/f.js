@@ -1,3 +1,4 @@
+module('model test');
 test("model get/set test",function(){
     
     var Model1 = f.Model.extend({
@@ -27,7 +28,7 @@ test('model previous test', function () {
             this.on('change', function () {
                 start();
 
-                QUnit.deepEqual(null, this.previous('hoge'), 'previous("hoge")');
+                QUnit.deepEqual(undefined, this.previous('hoge'), 'previous("hoge")');
             }, this);
         }
     });
@@ -40,7 +41,7 @@ test('model previous test', function () {
 });
 
 
-module('utilities');
+module('utilities test');
 
 test('isEmpty test', function () {
 
