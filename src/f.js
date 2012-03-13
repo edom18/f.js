@@ -395,7 +395,7 @@ copyClone(View.prototype, EventDispatcher.prototype, {
 
         //initialize call
         if ($.isFunction(this.initialize)) {
-            this.initialize.apply(this, opt);
+            this.initialize.apply(this, arguments);
         }
     },
 
