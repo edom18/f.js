@@ -279,7 +279,7 @@ copyClone(Model.prototype, EventDispatcher.prototype, {
      */
     hasChanged: function () {
     
-        return !!this._changed;
+        return !isEmpty(this._changed);
     },
 
     /**
