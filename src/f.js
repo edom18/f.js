@@ -45,7 +45,7 @@ var f = {
 
 function hasProp(obj, prop) {
 
-    return Object.prototype.hasOwnProperty.call(obj, prop);
+    return objProto.hasOwnProperty.call(obj, prop);
 }
 
 function isEmpty(obj) {
@@ -81,19 +81,29 @@ function isEmpty(obj) {
  */
 function copyClone(obj) {
 
-    var args = Array.prototype.slice.call(arguments, 1),
+    var args = arrProto.slice.call(arguments, 1),
         l    = args.length,
         i    = 0,
-        source, prop;
+        src, prop;
 
     for (; i < l; i++) {
-        source = args[i];
-        for (prop in source) {
+        src = args[i];
+        for (prop in src) {
             obj[prop] = args[i][prop];
         }
     }
 
     return obj;
+}
+
+function entity(str) {
+
+    return ('' + str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/\//g,'&#x2F;');
+}
+
+function unescape(str) {
+
+    return str.replace(/\\\\/g, '\\').replace(/\\'/g, "'");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,33 +121,33 @@ function extend(protoProps, classProps) {
     //////////////////////////////////////////////////////////////
 
     
-    function inherits(parent, protoProps, staticProps) {
+    function inherits(_super, protoProp, staticProp) {
 
         var child;
 
-        if (protoProps && protoProps.hasOwnProperty('constructor')) {
-            child = protoProps.constructor;
+        if (protoProp && protoProp.hasOwnProperty('constructor')) {
+            child = protoProp.constructor;
         }
         else {
             child = function(){
-                parent.apply(this, arguments);
+                _super.apply(this, arguments);
             };
         }
 
-        copyClone(child, parent);
+        copyClone(child, _super);
 
-        ctor.prototype = parent.prototype;
+        ctor.prototype = _super.prototype;
         child.prototype = new ctor();
 
-        if (protoProps) {
-            copyClone(child.prototype, protoProps);
+        if (protoProp) {
+            copyClone(child.prototype, protoProp);
         }
 
-        if (staticProps) {
-            copyClone(child, staticProps);
+        if (staticProp) {
+            copyClone(child, staticProp);
         }
         child.prototype.constructor = child;
-        child.__super__ = parent.prototype;
+        child.__super__ = _super.prototype;
 
         return child;
     }
@@ -448,6 +458,8 @@ f.utils.extend    = extend;
 f.utils.copyClone = copyClone;
 f.utils.isEmpty   = isEmpty;
 f.utils.hasProp   = hasProp;
+f.utils.entity    = entity;
+f.utils.unescape  = unescape;
 
 //for MVC
 f.Model = Model;
