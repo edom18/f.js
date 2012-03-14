@@ -43,3 +43,10 @@ var view = new View1({
 });
 
 console.log(model);
+
+var template = utils.template($('#test').html());
+console.log(template);
+console.log(template({
+    hoge: 'hogehoge',
+    hoge2: 'hoge2hoge2'
+}));

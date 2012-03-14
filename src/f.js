@@ -106,6 +106,64 @@ function unescape(str) {
     return str.replace(/\\\\/g, '\\').replace(/\\'/g, "'");
 }
 
+function template(source, data) {
+
+    var  settings, funcTmpl, func,
+         noMath = /.^/;
+    
+    function _parse(code) {
+    
+        code = code.replace(/\\/g, '\\\\');
+        code = code.replace(/\'/g, "\\'");
+        code = code.replace(settings.deploy || noMatch, function (m, code) {
+
+            return "', f.utils.entity(" + unescape(code) + "), '";
+        });
+        code = code.replace(settings.escape || noMatch, function (m, code) {
+
+            return "', " + unescape(code) + ", '";
+        });
+        code = code.replace(settings.exe || noMatch, function (m, code) {
+
+            return "'); " + unescape(code).replace(/[\r\n\t]/g, ' ') + "; __f.push('";
+        });
+        code = code.replace(/\n/g, '\\n');
+        code = code.replace(/\r/g, '\\r');
+        code = code.replace(/\t/g, '\\t');
+
+        return code;
+    }
+
+    //////////////////////////////////////////////////////////////////////
+
+    settings = {
+        exe   : /<%([\s\S]+?)%>/g,
+        deploy: /<%=([\s\S]+?)%>/g,
+        escape: /<%-([\s\S]+?)%>/g
+    };
+
+    funcTmpl = [
+        'var __f = [];',
+        'with (obj || {}) {',
+            '__f.push(\'',
+                _parse(source),
+            '\');',
+        '}',
+        'return __f.join("");'
+    ].join('');
+
+    func = new Function('obj', 'f', funcTmpl);
+
+    if (data) {
+        return func(data, f);
+    }
+
+    return function (data) {
+    
+        return func.call(this, data, f);
+    };
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -460,6 +518,7 @@ f.utils.isEmpty   = isEmpty;
 f.utils.hasProp   = hasProp;
 f.utils.entity    = entity;
 f.utils.unescape  = unescape;
+f.utils.template  = template;
 
 //for MVC
 f.Model = Model;

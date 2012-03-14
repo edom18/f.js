@@ -18,6 +18,17 @@
         </div>
     <!-- /#container --></div>
 
+    <script type="text/x-tmpl" id="test">
+        <div>
+        	<p>test</p>
+            <p><%= hoge %></p>
+            <p><%- hoge2 %></p>
+            <% for (var i = 0; i < 5; i++) { %>
+                <p>test<%= i %></p>
+            <% } %>
+        </div>
+    </script>
+
 <script src="../lib/jquery-1.7.1.min.js"></script>
 <script src="../src/f.js"></script>
 <script src="test.js"></script>
