@@ -16,6 +16,10 @@
 
 'use strict';
 
+var objProto = Object.prototype,
+    arrProto = Array.prototype,
+    toString = objProto.toString;
+
 /* ---------------------------------------------------------------
    EXTEND BUILTIN OBJECTS
 ------------------------------------------------------------------ */
@@ -48,13 +52,13 @@ function isEmpty(obj) {
 
     var key;
 
-    if (Object.prototype.toString.call(obj) === '[object Function]') {
+    if (toString.call(obj) === '[object Function]') {
         return false;
     }
-    else if (
-        Object.prototype.toString.call(obj) === '[object Array]' ||
-        Object.prototype.toString.call(obj) === '[object String]'
-       ) {
+    else if (toString.call(obj) === '[object Number]') {
+        return false;
+    }
+    else if (toString.call(obj) === '[object Array]' || toString.call(obj) === '[object String]') {
            return obj.length === 0;
     }
     else if (obj === null) {

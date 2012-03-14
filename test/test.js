@@ -56,8 +56,10 @@ test('isEmpty test', function () {
         test7 = true,
         test8 = false,
         test9 = function () {},
-        test10 = null
-        test11 = undefined;
+        test10 = null,
+        test11 = undefined,
+        test12 = 0,
+        test13 = 1;
 
     QUnit.deepEqual(true, isEmpty(test1), 'empty string');
     QUnit.deepEqual(true, isEmpty(test2), 'empty array');
@@ -70,6 +72,8 @@ test('isEmpty test', function () {
     QUnit.deepEqual(false, isEmpty(test9), 'as function');
     QUnit.deepEqual(false, isEmpty(test10), 'as null');
     QUnit.deepEqual(false, isEmpty(test11), 'as undefiend');
+    QUnit.deepEqual(false, isEmpty(test12), 'Number of 0');
+    QUnit.deepEqual(false, isEmpty(test13), 'Number of 1');
 });
 
 test('hasProp test', function () {
