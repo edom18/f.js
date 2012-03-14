@@ -106,11 +106,13 @@ function unescape(str) {
     return str.replace(/\\\\/g, '\\').replace(/\\'/g, "'");
 }
 
-function template(source, data) {
+function template(source, data, options) {
 
     var  settings, funcTmpl, func,
          noMath = /.^/;
     
+    options || (options = {});
+
     function _parse(code) {
     
         code = code.replace(/\\/g, '\\\\');
@@ -144,11 +146,13 @@ function template(source, data) {
 
     funcTmpl = [
         'var __f = [];',
-        'with (obj || {}) {',
-            '__f.push(\'',
-                _parse(source),
-            '\');',
-        '}',
+        (options.throughErr) ? 'try {' : '',
+            'with (obj || {}) {',
+                '__f.push(\'',
+                    _parse(source),
+                '\');',
+            '}',
+        (options.throughErr) ? '} catch (e) {}' : '',
         'return __f.join("");'
     ].join('');
 
