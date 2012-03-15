@@ -73,6 +73,11 @@ function isUndefined(obj) {
     return obj === undefined;
 }
 
+var isArray = Array.isArray || function (obj) {
+
+    return toString(obj) === '[object Array]';
+};
+
 function isEmpty(obj) {
 
     var key;
@@ -83,7 +88,7 @@ function isEmpty(obj) {
     else if (isNumber(obj)) {
         return false;
     }
-    else if (toString.call(obj) === '[object Array]' || isString(obj)) {
+    else if (isArray(obj) || isString(obj)) {
            return obj.length === 0;
     }
     else if (isNull(obj)) {
