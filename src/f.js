@@ -561,16 +561,19 @@ Model.extend = View.extend = extend;
     EXPORT
 ----------------------------------------------------------------------- */
 //for utils
-f.utils.extend     = extend;
-f.utils.copyClone  = copyClone;
-f.utils.isFunction = isFunction;
-f.utils.isString   = isString;
-f.utils.isNumber   = isNumber;
-f.utils.isEmpty    = isEmpty;
-f.utils.hasProp    = hasProp;
-f.utils.entity     = entity;
-f.utils.unescape   = unescape;
-f.utils.template   = template;
+f.utils.extend      = extend;
+f.utils.copyClone   = copyClone;
+f.utils.isFunction  = isFunction;
+f.utils.isString    = isString;
+f.utils.isNumber    = isNumber;
+f.utils.isArray     = isArray;
+f.utils.isNull      = isNull;
+f.utils.isUndefined = isUndefined;
+f.utils.isEmpty     = isEmpty;
+f.utils.hasProp     = hasProp;
+f.utils.entity      = entity;
+f.utils.unescape    = unescape;
+f.utils.template    = template;
 
 //for MVC
 f.Model = Model;
