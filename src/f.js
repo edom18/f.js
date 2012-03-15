@@ -48,23 +48,48 @@ function hasProp(obj, prop) {
     return objProto.hasOwnProperty.call(obj, prop);
 }
 
+function isFunction(obj) {
+
+    return toString.call(obj) === '[object Function]';
+}
+
+function isString(obj) {
+
+    return toString.call(obj) === '[object String]';
+}
+
+function isNumber(obj) {
+
+    return toString.call(obj) === '[object Number]';
+}
+
+function isNull(obj) {
+
+    return obj === null;
+}
+
+function isUndefined(obj) {
+
+    return obj === undefined;
+}
+
 function isEmpty(obj) {
 
     var key;
 
-    if (toString.call(obj) === '[object Function]') {
+    if (isFunction(obj)) {
         return false;
     }
-    else if (toString.call(obj) === '[object Number]') {
+    else if (isNumber(obj)) {
         return false;
     }
-    else if (toString.call(obj) === '[object Array]' || toString.call(obj) === '[object String]') {
+    else if (toString.call(obj) === '[object Array]' || isString(obj)) {
            return obj.length === 0;
     }
-    else if (obj === null) {
+    else if (isNull(obj)) {
         return false;
     }
-    else if (obj === undefined) {
+    else if (isUndefined(obj)) {
         return false;
     }
 
@@ -531,13 +556,16 @@ Model.extend = View.extend = extend;
     EXPORT
 ----------------------------------------------------------------------- */
 //for utils
-f.utils.extend    = extend;
-f.utils.copyClone = copyClone;
-f.utils.isEmpty   = isEmpty;
-f.utils.hasProp   = hasProp;
-f.utils.entity    = entity;
-f.utils.unescape  = unescape;
-f.utils.template  = template;
+f.utils.extend     = extend;
+f.utils.copyClone  = copyClone;
+f.utils.isFunction = isFunction;
+f.utils.isString   = isString;
+f.utils.isNumber   = isNumber;
+f.utils.isEmpty    = isEmpty;
+f.utils.hasProp    = hasProp;
+f.utils.entity     = entity;
+f.utils.unescape   = unescape;
+f.utils.template   = template;
 
 //for MVC
 f.Model = Model;
