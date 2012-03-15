@@ -377,6 +377,12 @@ copyClone(Model.prototype, EventDispatcher.prototype, {
 
         options || (options = {});
 
+        if (this._changing || !this.hasChanged()) {
+            return false;
+        }
+
+        this._changing = true;
+
         //fired `change` event that takes changed object.
         if (!options.silent) {
             this.trigger('change', this._changed);
@@ -393,6 +399,8 @@ copyClone(Model.prototype, EventDispatcher.prototype, {
         //delete changed object.
         this._changed = null;
         delete this._changed;
+
+        this._changing = false;
     },
     set: function (name, val, options) {
     
