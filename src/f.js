@@ -373,11 +373,18 @@ copyClone(Model.prototype, EventDispatcher.prototype, {
      */
     change: function (options) {
 
+        var key;
+
         options || (options = {});
 
         //fired `change` event that takes changed object.
         if (!options.silent) {
             this.trigger('change', this._changed);
+
+            //fired event of each paramaters.
+            for (key in this._changed) {
+                this.trigger('change:' + key, this._changed[key]);
+            }
         }
 
         //copy `this.attributes` to `this._previousAttributes`.
