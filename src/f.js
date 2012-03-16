@@ -322,8 +322,21 @@ EventDispatcher.prototype = (function() {
             i = arr.length;
             
         while(i) {
-            arr[--i] === fnc && arr.splice(i, 1);
+            arr[--i][0] === fnc && arr.splice(i, 1);
         }
+    }
+
+    function one(typ, fnc, context) {
+    
+        var self = this;
+
+        function _fnc() {
+
+            self.removeEventListener(typ, _fnc, context);
+            fnc.apply(context || self, arguments);
+        }
+
+        this.addEventListener(typ, _fnc, context);
     }
 
     /* --------------------------------------------------------------------
@@ -341,7 +354,9 @@ EventDispatcher.prototype = (function() {
         
         removeEventListener : removeEventListener,
         unbind              : removeEventListener,
-        off                 : removeEventListener
+        off                 : removeEventListener,
+
+        one                 : one
     };
 }());
 
@@ -403,7 +418,7 @@ copyClone(Model.prototype, EventDispatcher.prototype, {
      */
     change: function (options) {
 
-        var key;
+        var key, ret;
 
         options || (options = {});
 
@@ -419,7 +434,9 @@ copyClone(Model.prototype, EventDispatcher.prototype, {
 
             //fired event of each paramaters.
             for (key in this._changed) {
-                this.trigger('change:' + key, this._changed[key]);
+                ret = {};
+                ret[key] = this._changed[key];
+                this.trigger('change:' + key, ret);
             }
         }
 

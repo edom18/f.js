@@ -2,16 +2,16 @@ var utils = f.utils,
     Model = f.Model,
     View  = f.View;
 
-var Model1 = Model.extend({
-    defaults: {
-        hoge: 'hogehoge'
-    },
-    initialize: function () {
+//var Model1 = Model.extend({
+//    defaults: {
+//        hoge: 'hogehoge'
+//    },
+//    initialize: function () {
 
-    }
-});
+//    }
+//});
 
-var model = new Model1();
+//var model = new Model1();
 
 var View1 = View.extend({
     events: {
@@ -20,7 +20,7 @@ var View1 = View.extend({
     },
     initialize: function () {
 
-        this.model.on('change', this.render, this);
+        //this.model.on('change', this.render, this);
     },
     _onClick: function () {
 
@@ -39,14 +39,23 @@ var View1 = View.extend({
 });
 
 var view = new View1({
-    model: model
+    //model: model
 });
 
-console.log(model);
+//console.log(model);
 
-var template = utils.template($('#test').html());
-console.log(template);
-console.log(template({
-    hoge: 'hogehoge',
-    hoge2: 'hoge2hoge2'
-}));
+//var template = utils.template($('#test').html());
+//console.log(template);
+//console.log(template({
+//    hoge: 'hogehoge',
+//    hoge2: 'hoge2hoge2'
+//}));
+
+function testFnc() {
+
+    console.log(arguments);
+}
+view.one('test', testFnc, view);
+
+view.trigger('test', {hoge: 'hoge'});
+view.trigger('test', {hoge: 'hoge'});
