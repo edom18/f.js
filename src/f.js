@@ -92,10 +92,10 @@ function isEmpty(obj) {
            return obj.length === 0;
     }
     else if (isNull(obj)) {
-        return false;
+        return true;
     }
     else if (isUndefined(obj)) {
-        return false;
+        return true;
     }
 
     for (key in obj) if (obj.hasOwnProperty(key)) {
