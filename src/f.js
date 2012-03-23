@@ -43,6 +43,16 @@ var f = {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//TODO
+function chkProp(obj, propList) {
+
+    var key, tmp;
+
+    for (key in obj) {
+        //if (obj[key]) 
+    }
+}
+
 function hasProp(obj, prop) {
 
     return objProto.hasOwnProperty.call(obj, prop);
@@ -75,7 +85,7 @@ function isUndefined(obj) {
 
 var isArray = Array.isArray || function (obj) {
 
-    return toString(obj) === '[object Array]';
+    return toString.call(obj) === '[object Array]';
 };
 
 function isEmpty(obj) {
@@ -98,7 +108,7 @@ function isEmpty(obj) {
         return true;
     }
 
-    for (key in obj) if (obj.hasOwnProperty(key)) {
+    for (key in obj) if (hasProp(obj, key)) {
         return false;
     }
 
@@ -134,6 +144,25 @@ function entity(str) {
 function unescape(str) {
 
     return str.replace(/\\\\/g, '\\').replace(/\\'/g, "'");
+}
+
+
+/**
+ * return object by split string within `&` and `=`.
+ * @returns {Object} splited parameters.
+ */
+function getParams(str) {
+
+    var ret = {},
+        tmp, i = 0, l;
+
+    tmp = str.split('&');
+    for (l = tmp.length; i < l; i++) {
+        tmp2 = tmp[i].split('=');
+        ret[tmp2[0]] = tmp2[1];
+    }
+
+    return ret;
 }
 
 function template(source, data, options) {
@@ -217,7 +246,7 @@ function extend(protoProps, classProps) {
 
         var child;
 
-        if (protoProp && protoProp.hasOwnProperty('constructor')) {
+        if (protoProp && hasProp(protoProp, 'constructor')) {
             child = protoProp.constructor;
         }
         else {
@@ -591,6 +620,7 @@ f.utils.hasProp     = hasProp;
 f.utils.entity      = entity;
 f.utils.unescape    = unescape;
 f.utils.template    = template;
+f.utils.getParams   = getParams;
 
 //for MVC
 f.Model = Model;

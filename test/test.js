@@ -70,8 +70,8 @@ test('isEmpty test', function () {
     QUnit.deepEqual(true, isEmpty(test7), 'Boolean');
     QUnit.deepEqual(true, isEmpty(test8), 'Boolean');
     QUnit.deepEqual(false, isEmpty(test9), 'as function');
-    QUnit.deepEqual(false, isEmpty(test10), 'as null');
-    QUnit.deepEqual(false, isEmpty(test11), 'as undefiend');
+    QUnit.deepEqual(true, isEmpty(test10), 'as null');
+    QUnit.deepEqual(true, isEmpty(test11), 'as undefiend');
     QUnit.deepEqual(false, isEmpty(test12), 'Number of 0');
     QUnit.deepEqual(false, isEmpty(test13), 'Number of 1');
 });

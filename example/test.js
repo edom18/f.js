@@ -44,12 +44,12 @@ var view = new View1({
 
 //console.log(model);
 
-//var template = utils.template($('#test').html());
-//console.log(template);
-//console.log(template({
-//    hoge: 'hogehoge',
-//    hoge2: 'hoge2hoge2'
-//}));
+var template = utils.template($('#test').html());
+console.log(template);
+console.log(template({
+    hoge: 'hogehoge',
+    hoge2: 'hoge2hoge2'
+}));
 
 function testFnc() {
 
@@ -59,3 +59,6 @@ view.one('test', testFnc, view);
 
 view.trigger('test', {hoge: 'hoge'});
 view.trigger('test', {hoge: 'hoge'});
+
+var obj = {};
+utils.isEmpty(obj);
