@@ -6,7 +6,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  *
  * @author   Kazuya Hiruma (http://css-eblog.com/)
- * @version  0.2.0
+ * @version  0.2.1
  * @github   https://github.com/edom18/f.js
  * @require jQuery
  *
@@ -139,6 +139,11 @@ function copyClone(obj) {
 function entity(str) {
 
     return ('' + str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/\//g,'&#x2F;');
+}
+
+function unentity(str) {
+
+    return ('' + str).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quout;/g, '"').replace(/&#x27;/g, "'").replace(/&#x2F;/g,'\/');
 }
 
 function unescape(str) {
@@ -618,6 +623,7 @@ f.utils.isUndefined = isUndefined;
 f.utils.isEmpty     = isEmpty;
 f.utils.hasProp     = hasProp;
 f.utils.entity      = entity;
+f.utils.unentity    = unentity;
 f.utils.unescape    = unescape;
 f.utils.template    = template;
 f.utils.getParams   = getParams;
