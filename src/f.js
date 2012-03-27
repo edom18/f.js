@@ -6,7 +6,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  *
  * @author   Kazuya Hiruma (http://css-eblog.com/)
- * @version  0.2.1
+ * @version  0.2.0
  * @github   https://github.com/edom18/f.js
  * @require jQuery
  *
@@ -138,12 +138,33 @@ function copyClone(obj) {
 
 function entity(str) {
 
-    return ('' + str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/\//g,'&#x2F;');
+    return ('' + str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#x27;')
+            .replace(/\//g,'&#x2F;');
 }
 
 function unentity(str) {
 
-    return ('' + str).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quout;/g, '"').replace(/&#x27;/g, "'").replace(/&#x2F;/g,'\/');
+    return ('' + str)
+            .replace(/&amp;/g, '&')
+            .replace(/&#x26;/g, '&')
+            .replace(/&#38;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&#x3c;/g, '<')
+            .replace(/&#60;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&#x3e;/g, '>')
+            .replace(/&#62;/g, '>')
+            .replace(/&quout;/g, '"')
+            .replace(/&#x22;/g, '"')
+            .replace(/&#34;/g, '"')
+            .replace(/&#39;/g, "'")
+            .replace(/&#x27;/g, "'")
+            .replace(/&#x2F;/g,'\/');
 }
 
 function unescape(str) {
