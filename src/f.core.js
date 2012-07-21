@@ -121,6 +121,17 @@ function isEmpty(obj) {
 }
 
 /**
+ * Bind function to context.
+ */
+function bind(func, context) {
+
+    return function () {
+    
+        func.apply(context, arguments);
+    };
+}
+
+/**
  * copy arguments object properties to `obj`
  * @param {Object} obj base to be copy of properties.
  */
@@ -316,6 +327,7 @@ function extend(protoProps, classProps) {
     EXPORT
 ----------------------------------------------------------------------- */
 //for utils
+f.utils.bind        = f.bind        = bind;
 f.utils.extend      = f.extend      = extend;
 f.utils.copyClone   = f.copyClone   = copyClone;
 f.utils.isFunction  = f.isFunction  = isFunction;
