@@ -329,7 +329,7 @@ EventDispatcher.prototype = (function() {
         }
         
         var obj = this.handlers || (this.handlers = {}),
-            arr = obj[typ] || [],
+            arr = [].concat(obj[typ] || []), //Use copy
             evt = opt_evt || {},
             len, i, fnc;
             
