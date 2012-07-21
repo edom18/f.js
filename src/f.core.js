@@ -328,6 +328,9 @@ f.utils.isEmpty     = f.isEmpty     = isEmpty;
 f.utils.hasProp     = f.hasProp     = hasProp;
 f.utils.template    = f.template    = template;
 f.utils.getParams   = getParams;
+f.utils.entity      = entity;
+f.utils.unentity    = unentity;
+f.utils.unescape    = unescape;
 
 //export to global.
 exports.f = f;

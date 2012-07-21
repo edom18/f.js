@@ -17,7 +17,11 @@
 'use strict';
 
 var modelIdBase = 'id',
-    modelIdIndex = 0;
+    modelIdIndex = 0,
+    EventDispatcher = f.events.EventDispatcher,
+    utils = f.utils,
+    copyClone = utils.copyClone,
+    extend = utils.extend;
 
 /**
  * Model of MVC
