@@ -323,6 +323,50 @@ function extend(protoProps, classProps) {
     return child;
 }
 
+function Deferred(func) {
+  
+    var _queue = [],
+        ret = {
+            done: done,
+            resolve: resolve
+        };
+
+    function done(func) {
+        if (isFunction(func)) {
+            _queue ? _queue.push(func) : func();
+        }
+    }
+    function resolve() {
+
+        var arr = _queue,
+            i = 0,
+            l = arr.length;
+
+        _queue = null;
+
+        for (; i < l; i++) {
+            arr[i](arguments);
+        }
+    }
+
+    func(ret);
+
+    return ret;
+}
+
+var d = new Deferred(function (d) {
+
+    d.done(function (data) { console.log(data); });
+});
+
+setTimeout(function () {
+  d.resolve('hoge');
+  
+  d.done(function () {
+    console.log('after hoge');
+  });
+}, 5000);
+
 /* --------------------------------------------------------------------
     EXPORT
 ----------------------------------------------------------------------- */
