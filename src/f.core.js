@@ -326,6 +326,7 @@ function extend(protoProps, classProps) {
 function Deferred(func) {
   
     var _queue = [],
+        _data,
         ret = {
             done: done,
             resolve: resolve
@@ -333,19 +334,20 @@ function Deferred(func) {
 
     function done(func) {
         if (isFunction(func)) {
-            _queue ? _queue.push(func) : func();
+            _queue ? _queue.push(func) : func(_data);
         }
     }
-    function resolve() {
+    function resolve(data) {
 
         var arr = _queue,
             i = 0,
             l = arr.length;
 
+        _data = data;
         _queue = null;
 
         for (; i < l; i++) {
-            arr[i](arguments);
+            arr[i](data);
         }
     }
 
@@ -371,6 +373,7 @@ setTimeout(function () {
     EXPORT
 ----------------------------------------------------------------------- */
 //for utils
+f.utils.Deferred    = f.Deferred    = Deferred;
 f.utils.bind        = f.bind        = bind;
 f.utils.extend      = f.extend      = extend;
 f.utils.copyClone   = f.copyClone   = copyClone;
