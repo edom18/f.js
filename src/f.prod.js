@@ -8,8 +8,6 @@
  * @author   Kazuya Hiruma (http://css-eblog.com/)
  * @version  0.2.0
  * @github   https://github.com/edom18/f.js
- * @require jQuery
- *
  */
 
 (function (win, doc, exports, undefined) {
@@ -118,6 +116,17 @@ function isEmpty(obj) {
     }
 
     return true;
+}
+
+/**
+ * Bind function to context.
+ */
+function bind(func, context) {
+
+    return function () {
+    
+        func.apply(context, arguments);
+    };
 }
 
 /**
@@ -312,10 +321,58 @@ function extend(protoProps, classProps) {
     return child;
 }
 
+function Deferred(func) {
+  
+    var _queue = [],
+        _data,
+        ret = {
+            done: done,
+            resolve: resolve
+        };
+
+    function done(func) {
+        if (isFunction(func)) {
+            _queue ? _queue.push(func) : func(_data);
+        }
+    }
+    function resolve(data) {
+
+        var arr = _queue,
+            i = 0,
+            l = arr.length;
+
+        _data = data;
+        _queue = null;
+
+        for (; i < l; i++) {
+            arr[i](data);
+        }
+    }
+
+    func(ret);
+
+    return ret;
+}
+
+var d = new Deferred(function (d) {
+
+    d.done(function (data) { console.log(data); });
+});
+
+setTimeout(function () {
+  d.resolve('hoge');
+  
+  d.done(function () {
+    console.log('after hoge');
+  });
+}, 5000);
+
 /* --------------------------------------------------------------------
     EXPORT
 ----------------------------------------------------------------------- */
 //for utils
+f.utils.Deferred    = f.Deferred    = Deferred;
+f.utils.bind        = f.bind        = bind;
 f.utils.extend      = f.extend      = extend;
 f.utils.copyClone   = f.copyClone   = copyClone;
 f.utils.isFunction  = f.isFunction  = isFunction;
@@ -337,7 +394,9 @@ exports.f = f;
 
 }(window, document, window));
 /*
- * f.js - markup engineer's coding adminicle JavaScript library plus HTML5.
+ * f.event.js
+ *
+ * This script give the event object.
  *
  * Copyright (c) 2012 Kazuya Hiruma
  * Licensed under the MIT License:
@@ -346,7 +405,7 @@ exports.f = f;
  * @author   Kazuya Hiruma (http://css-eblog.com/)
  * @version  0.2.0
  * @github   https://github.com/edom18/f.js
- * @require jQuery
+ * @require f.core.js
  *
  */
 
@@ -468,7 +527,9 @@ f.events.EventDispatcher = EventDispatcher;
 
 }(f, window, document, window));
 /*
- * f.js - markup engineer's coding adminicle JavaScript library plus HTML5.
+ * f.mvc.js
+ *
+ * This script give the abstract MVC.
  *
  * Copyright (c) 2012 Kazuya Hiruma
  * Licensed under the MIT License:
@@ -477,8 +538,7 @@ f.events.EventDispatcher = EventDispatcher;
  * @author   Kazuya Hiruma (http://css-eblog.com/)
  * @version  0.2.0
  * @github   https://github.com/edom18/f.js
- * @require jQuery
- *
+ * @require f.js
  */
 
 (function (f, win, doc, exports, undefined) {
