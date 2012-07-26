@@ -16,6 +16,7 @@
 
 var objProto = Object.prototype,
     arrProto = Array.prototype,
+    arrSlice = arrProto.slice,
     toString = objProto.toString;
 
 /* ---------------------------------------------------------------
@@ -148,6 +149,16 @@ function copyClone(obj) {
     }
 
     return obj;
+}
+
+/**
+ * Make a new array.
+ * @param {Array} arr
+ * @returns {Array} A new array object.
+ */
+function makeArr(arr) {
+
+    return arrSlice.call(arr);
 }
 
 function entity(str) {
@@ -372,6 +383,7 @@ setTimeout(function () {
 ----------------------------------------------------------------------- */
 //for utils
 f.utils.Deferred    = f.Deferred    = Deferred;
+f.utils.makeArr     = f.makeArr     = makeArr;
 f.utils.bind        = f.bind        = bind;
 f.utils.extend      = f.extend      = extend;
 f.utils.copyClone   = f.copyClone   = copyClone;
