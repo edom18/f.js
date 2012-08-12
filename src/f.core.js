@@ -360,7 +360,9 @@ function Deferred(func) {
         }
     }
 
-    func(ret);
+    if (isFunction(func)) {
+        func(ret);
+    }
 
     return ret;
 }

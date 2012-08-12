@@ -360,28 +360,94 @@ function Deferred(func) {
         }
     }
 
-    func(ret);
+    if (isFunction(func)) {
+        func(ret);
+    }
 
     return ret;
 }
 
-var d = new Deferred(function (d) {
+/////////////////////////////////////////////////////////////////////////
 
-    d.done(function (data) { console.log(data); });
-});
+function when(arr) {
 
-setTimeout(function () {
-  d.resolve('hoge');
-  
-  d.done(function () {
-    console.log('after hoge');
-  });
-}, 5000);
+    var d = new Deferred(),
+        i = arr.length,
+        len = l;
+
+    function _watch() {
+        --len || d.resolve();
+    }
+
+    while(i--) {
+        arr[i].done(_watch);
+    }
+
+    return d;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
+/**
+ * @class Throttle
+ * @param {Number} ms millsecounds
+ * @example
+ * var throttle = new Throttle(1000);
+ *
+ * var i = 0;
+ * var timer = setInterval(function () {
+ *     i++;
+ *     throttle.exec(function () {
+ *         console.log(i);
+ *     });
+ * }, 32);
+ */
+function Throttle(ms) {
+
+    var _timer,
+        prevTime;
+
+    function exec(func) {
+
+        var now = +new Date(),
+            delta;
+
+        if (!isFunction(func)) {
+            return false;
+        }
+
+        if (!prevTime) {
+            func();
+            prevTime = now;
+            return;
+        }
+
+        clearTimeout(_timer);
+        delta = now - prevTime;
+        if (delta > ms) {
+            func();
+            prevTime = now;
+        }
+        else {
+            _timer = setTimeout(function () {
+                func();
+                _timer = null;
+                prevTime = now;
+            }, ms);
+        }
+    }
+
+    return {
+        exec: exec
+    };
+}
+
 
 /* --------------------------------------------------------------------
     EXPORT
 ----------------------------------------------------------------------- */
 //for utils
+f.utils.Throttle    = f.Throttle    = Throttle;
 f.utils.Deferred    = f.Deferred    = Deferred;
 f.utils.makeArr     = f.makeArr     = makeArr;
 f.utils.bind        = f.bind        = bind;
