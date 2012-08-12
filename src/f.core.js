@@ -367,6 +367,25 @@ function Deferred(func) {
 
 /////////////////////////////////////////////////////////////////////////
 
+function when(arr) {
+
+    var d = new Deferred(),
+        i = arr.length,
+        len = l;
+
+    function _watch() {
+        --len || d.resolve();
+    }
+
+    while(i--) {
+        arr[i].done(_watch);
+    }
+
+    return d;
+}
+
+/////////////////////////////////////////////////////////////////////////
+
 /**
  * @class Throttle
  * @param {Number} ms millsecounds
