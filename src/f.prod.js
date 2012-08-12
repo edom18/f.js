@@ -373,7 +373,7 @@ function when(arr) {
 
     var d = new Deferred(),
         i = arr.length,
-        len = l;
+        len = i;
 
     function _watch() {
         --len || d.resolve();
