@@ -345,6 +345,8 @@ function Deferred(func) {
         if (isFunction(func)) {
             _queue ? _queue.push(func) : func(_data);
         }
+
+        return this;
     }
     function resolve(data) {
 
