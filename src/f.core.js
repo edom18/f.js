@@ -449,6 +449,7 @@ function Throttle(ms) {
 //for utils
 f.utils.Throttle    = f.Throttle    = Throttle;
 f.utils.Deferred    = f.Deferred    = Deferred;
+f.utils.when        = f.when        = when;
 f.utils.makeArr     = f.makeArr     = makeArr;
 f.utils.bind        = f.bind        = bind;
 f.utils.extend      = f.extend      = extend;
