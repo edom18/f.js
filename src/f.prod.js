@@ -332,11 +332,12 @@ function extend(protoProps, classProps) {
     return child;
 }
 
-function Deferred(func) {
+function _Deferred(func) {
   
     var _queue = [],
         _data,
         ret = {
+            isResolved: isResolved,
             done: done,
             resolve: resolve
         };
@@ -349,6 +350,9 @@ function Deferred(func) {
         return this;
     }
     function resolve(data) {
+        if (isResolved()) {
+            return;
+        }
 
         var arr = _queue,
             i = 0,
@@ -360,6 +364,50 @@ function Deferred(func) {
         for (; i < l; i++) {
             arr[i](data);
         }
+    }
+    function isResolved() {
+        return !_queue;
+    }
+
+    if (isFunction(func)) {
+        func(ret);
+    }
+
+    return ret;
+}
+
+function Deferred(func) {
+    var _dSuccess = new _Deferred(),
+        _dFail    = new _Deferred(),
+        ret = {
+            resolve: resolve,
+            reject: reject,
+            done: done,
+            fail: fail
+        };
+
+    function resolve() {
+        if (_dFail.isResolved()) {
+            return false;
+        }
+        _dSuccess.resolve.apply(null, arguments);
+    }
+
+    function reject() {
+        if (_dSuccess.isResolved()) {
+            return false;
+        }
+        _dFail.resolve.apply(null, arguments);
+    }
+
+    function done() {
+        _dSuccess.done.apply(null, arguments);
+        return this;
+    }
+
+    function fail() {
+        _dFail.done.apply(null, arguments);
+        return this;
     }
 
     if (isFunction(func)) {
