@@ -127,6 +127,8 @@ EventDispatcher.prototype = (function() {
     EXPORT
 ----------------------------------------------------------------------- */
 //for events
-exports.f.events.EventDispatcher = EventDispatcher;
+exports.f.events = {
+    EventDispatcher: EventDispatcher
+};
 
 }(window, window.document, window));
