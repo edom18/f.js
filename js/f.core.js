@@ -70,6 +70,10 @@ function isNumber(obj) {
     return toString.call(obj) === '[object Number]';
 }
 
+function isBoolean(obj) {
+    return toString.call(obj) === '[object Boolean]';
+}
+
 function isNull(obj) {
     return obj === null;
 }
@@ -90,7 +94,7 @@ function isEmpty(obj) {
         return false;
     }
     else if (isNumber(obj)) {
-        return false;
+        return obj === 0;
     }
     else if (isArray(obj) || isString(obj)) {
            return obj.length === 0;
@@ -100,6 +104,9 @@ function isEmpty(obj) {
     }
     else if (isUndefined(obj)) {
         return true;
+    }
+    else if (isBoolean(obj)) {
+        return !obj;
     }
 
     for (key in obj) if (hasProp(obj, key)) {
