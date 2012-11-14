@@ -1,10 +1,7 @@
 /* Class: "../../../js/f.mvc.js" */
 describe('f.mvcは', function() {
-    var mvc;
-
     beforeEach(function() {
         // init
-        mvc = new Global.f.mvc();
     });
     afterEach(function() {
         // clear
@@ -28,9 +25,6 @@ describe('f.mvcは', function() {
     //     }
     // });
 
-    it('zzzである', function() {
-        expect(0).toEqual(1);
-    });
 });
 /*
 describe('XXXは', function() {
