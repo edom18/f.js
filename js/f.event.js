@@ -8,13 +8,12 @@
  * http://www.opensource.org/licenses/mit-license.php
  *
  * @author   Kazuya Hiruma (http://css-eblog.com/)
- * @version  0.2.0
+ * @version  0.1.0
  * @github   https://github.com/edom18/f.js
- * @require f.core.js
- *
+ * @require  f.core.js
  */
 
-(function (f, win, doc, exports, undefined) {
+(function (win, doc, exports, undefined) {
 
 'use strict';
 
@@ -128,6 +127,6 @@ EventDispatcher.prototype = (function() {
     EXPORT
 ----------------------------------------------------------------------- */
 //for events
-f.events.EventDispatcher = EventDispatcher;
+exports.f.events.EventDispatcher = EventDispatcher;
 
-}(f, window, document, window));
+}(window, window.document, window));

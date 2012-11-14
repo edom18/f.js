@@ -8,11 +8,11 @@
  * http://www.opensource.org/licenses/mit-license.php
  *
  * @author   Kazuya Hiruma (http://css-eblog.com/)
- * @version  0.2.0
+ * @version  0.1.0
  * @github   https://github.com/edom18/f.js
- * @require f.js
+ * @require  f.core.js
  */
-(function (f, win, doc, exports) {
+(function (win, doc, exports) {
 
 'use strict';
 
@@ -63,7 +63,7 @@ function after(target, methodNames, aspect) {
   EXPORTS
 ---------------------------------------------------------- */
 //Aspect
-f.aspect          = {};
-f.aspect.after    = after;
+exports.f.aspect          = {};
+exports.f.aspect.after    = after;
 
-}(f, window, document, window));
+}(window, document, window));
