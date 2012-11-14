@@ -58,37 +58,30 @@ function chkProp(obj, propList) {
     FOR CHECKING UTILITES
 ------------------------------------------------------------------------------------------------- */
 function hasProp(obj, prop) {
-
     return objProto.hasOwnProperty.call(obj, prop);
 }
 
 function isFunction(obj) {
-
     return toString.call(obj) === '[object Function]';
 }
 
 function isString(obj) {
-
     return toString.call(obj) === '[object String]';
 }
 
 function isNumber(obj) {
-
     return toString.call(obj) === '[object Number]';
 }
 
 function isNull(obj) {
-
     return obj === null;
 }
 
 function isUndefined(obj) {
-
     return obj === undefined;
 }
 
 var isArray = Array.isArray || function (obj) {
-
     return toString.call(obj) === '[object Array]';
 };
 
@@ -123,7 +116,6 @@ function isEmpty(obj) {
  * Bind function to context.
  */
 function bind(func, context) {
-
     return function () {
     
         func.apply(context, arguments);
@@ -157,12 +149,10 @@ function copyClone(obj) {
  * @returns {Array} A new array object.
  */
 function makeArr(arr) {
-
     return arrSlice.call(arr);
 }
 
 function entity(str) {
-
     return ('' + str)
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -173,7 +163,6 @@ function entity(str) {
 }
 
 function unentity(str) {
-
     return ('' + str)
             .replace(/&amp;/g, '&')
             .replace(/&#x26;/g, '&')
@@ -193,7 +182,6 @@ function unentity(str) {
 }
 
 function unescape(str) {
-
     return str.replace(/\\\\/g, '\\').replace(/\\'/g, "'");
 }
 
