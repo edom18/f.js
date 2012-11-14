@@ -1,7 +1,7 @@
-SRC = src/f.core.js src/f.event.js src/f.mvc.js
+SRC = js/f.core.js js/f.event.js js/f.mvc.js
 
-COMBINE = src/f.prod.js
-COMPRESS = src/f.prod.min.js
+COMBINE = js/f.js
+COMPRESS = js/f.min.js
  
 $(COMBINE) : $(SRC)
 	cat $^ > $@
