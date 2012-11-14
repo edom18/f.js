@@ -36,10 +36,7 @@ if (typeof Object.create !== 'function') {
  * @namespace
  */
 var f = {
-    utils : {},
-    events: {},
-    Model : {},
-    View  : {}
+    utils : {}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,37 +55,34 @@ function chkProp(obj, propList) {
     FOR CHECKING UTILITES
 ------------------------------------------------------------------------------------------------- */
 function hasProp(obj, prop) {
-
     return objProto.hasOwnProperty.call(obj, prop);
 }
 
 function isFunction(obj) {
-
     return toString.call(obj) === '[object Function]';
 }
 
 function isString(obj) {
-
     return toString.call(obj) === '[object String]';
 }
 
 function isNumber(obj) {
-
     return toString.call(obj) === '[object Number]';
 }
 
-function isNull(obj) {
+function isBoolean(obj) {
+    return toString.call(obj) === '[object Boolean]';
+}
 
+function isNull(obj) {
     return obj === null;
 }
 
 function isUndefined(obj) {
-
     return obj === undefined;
 }
 
 var isArray = Array.isArray || function (obj) {
-
     return toString.call(obj) === '[object Array]';
 };
 
@@ -100,7 +94,7 @@ function isEmpty(obj) {
         return false;
     }
     else if (isNumber(obj)) {
-        return false;
+        return obj === 0;
     }
     else if (isArray(obj) || isString(obj)) {
            return obj.length === 0;
@@ -110,6 +104,9 @@ function isEmpty(obj) {
     }
     else if (isUndefined(obj)) {
         return true;
+    }
+    else if (isBoolean(obj)) {
+        return !obj;
     }
 
     for (key in obj) if (hasProp(obj, key)) {
@@ -123,7 +120,6 @@ function isEmpty(obj) {
  * Bind function to context.
  */
 function bind(func, context) {
-
     return function () {
     
         func.apply(context, arguments);
@@ -157,12 +153,10 @@ function copyClone(obj) {
  * @returns {Array} A new array object.
  */
 function makeArr(arr) {
-
     return arrSlice.call(arr);
 }
 
 function entity(str) {
-
     return ('' + str)
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -173,7 +167,6 @@ function entity(str) {
 }
 
 function unentity(str) {
-
     return ('' + str)
             .replace(/&amp;/g, '&')
             .replace(/&#x26;/g, '&')
@@ -193,7 +186,6 @@ function unentity(str) {
 }
 
 function unescape(str) {
-
     return str.replace(/\\\\/g, '\\').replace(/\\'/g, "'");
 }
 
@@ -560,13 +552,12 @@ exports.f = f;
  * http://www.opensource.org/licenses/mit-license.php
  *
  * @author   Kazuya Hiruma (http://css-eblog.com/)
- * @version  0.2.0
+ * @version  0.1.0
  * @github   https://github.com/edom18/f.js
- * @require f.core.js
- *
+ * @require  f.core.js
  */
 
-(function (f, win, doc, exports, undefined) {
+(function (win, doc, exports, undefined) {
 
 'use strict';
 
@@ -680,9 +671,9 @@ EventDispatcher.prototype = (function() {
     EXPORT
 ----------------------------------------------------------------------- */
 //for events
-f.events.EventDispatcher = EventDispatcher;
+exports.f.events.EventDispatcher = EventDispatcher;
 
-}(f, window, document, window));
+}(window, window.document, window));
 /*
  * f.mvc.js
  *
