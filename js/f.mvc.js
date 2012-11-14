@@ -7,22 +7,26 @@
  * Licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
  *
- * @author   Kazuya Hiruma (http://css-eblog.com/)
- * @version  0.2.0
- * @github   https://github.com/edom18/f.js
- * @require f.js
+ * @author  Kazuya Hiruma (http://css-eblog.com/)
+ * @version 0.2.0
+ * @github  https://github.com/edom18/f.js
+ * @require f.core.js
+ * @require f.event.js
  */
 
 (function (f, win, doc, exports, undefined) {
 
 'use strict';
 
-var modelIdBase = 'id',
-    modelIdIndex = 0,
+/*! --------------------------------------------------------
+    IMPORT
+------------------------------------------------------------ */
+var modelIdBase     = 'id',
+    modelIdIndex    = 0,
     EventDispatcher = f.events.EventDispatcher,
-    utils = f.utils,
-    copyClone = utils.copyClone,
-    extend = utils.extend;
+    utils           = f.utils,
+    copyClone       = utils.copyClone,
+    extend          = utils.extend;
 
 /**
  * Model of MVC
@@ -31,7 +35,6 @@ var modelIdBase = 'id',
  * @param opt {Object} use to initialize.
  */
 function Model(attr, opt) {
-
     this.init.apply(this, arguments);
 }
 
