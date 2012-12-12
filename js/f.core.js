@@ -121,10 +121,105 @@ function isEmpty(obj) {
  */
 function bind(func, context) {
     return function () {
-    
         func.apply(context, arguments);
     };
 }
+
+function each (arr, func) {
+    if (!isArray(arr)) {
+        return false;
+    }
+
+    if (arr.forEach) {
+        arr.forEach(func);
+    }
+    else {
+        for (var i = 0, l = arr.length; i < l; i++) {
+            func(arr[i], i);
+        }
+    }
+}
+
+function every (arr, func) {
+    if (!isArray(arr)) {
+        return false;
+    }
+
+    if (arr.every) {
+        return arr.every(func);
+    }
+    else {
+        for (var i = 0, l; i < l; i++) {
+            if (!func(arr[i], i, arr)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
+function some (arr, func) {
+    if (!isArray(arr)) {
+        return false;
+    }
+
+    if (arr.some) {
+        return arr.some(func);
+    }
+    else {
+        for (var i = 0, l; i < l; i++) {
+            if (func(arr[i], i)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+function filter (arr, func) {
+    if (!isArray(arr)) {
+        return false;
+    }
+
+    var ret = [];
+
+    if (arr.filter) {
+        return arr.filter(func);
+    }
+    else {
+        for (var i = 0, l; i < l; i++) {
+            if (func(arr[i], i)) {
+                ret.push(arr[i]);
+            }
+        }
+
+        return ret;
+    }
+}
+
+
+//function reduce (arr, func, initVal) {
+//    if (!isArray(arr)) {
+//        return false;
+//    }
+//
+//    var ret = +initVal || 0;
+//
+//    if (arr.reduce) {
+//        return arr.reduce(func, initVal);
+//    }
+//    else {
+//        for (var i = 0, l; i < l; i++) {
+//            if (func(arr[i], i)) {
+//                ret.push(arr[i]);
+//            }
+//        }
+//
+//        return ret;
+//    }
+//}
 
 /**
  * copy arguments object properties to `obj`
@@ -197,7 +292,10 @@ function unescape(str) {
 function getParams(str) {
 
     var ret = {},
-        tmp, i = 0, l;
+        tmp,
+        tmp2,
+        i = 0,
+        l = 0;
 
     tmp = str.split('&');
     for (l = tmp.length; i < l; i++) {
@@ -516,6 +614,8 @@ function chain() {
     EXPORT
 ----------------------------------------------------------------------- */
 //for utils
+f.utils.every       = f.every       = every;
+f.utils.each        = f.each        = each;
 f.utils.chain       = f.chain       = chain;
 f.utils.Throttle    = f.Throttle    = Throttle;
 f.utils.Deferred    = f.Deferred    = Deferred;
