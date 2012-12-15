@@ -251,6 +251,22 @@ function makeArr(arr) {
     return arrSlice.call(arr);
 }
 
+/**
+ * Gives you indexOf function.
+ * If browser gives you this method, return value with native function.
+ * @param {Array} arr target array.
+ * @param {*} item target item.
+ */
+function indexOf (arr, item) {
+    if (arr.indexOf) {
+        return arr.indexOf(item);
+    }
+    else {
+        for (var i = 0, l = arr; i < l; ++i) if (arr[i] === item) return i;
+    }
+    return -1;
+}
+
 function entity(str) {
     return ('' + str)
             .replace(/&/g, '&amp;')
