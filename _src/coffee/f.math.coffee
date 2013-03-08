@@ -1,5 +1,7 @@
 do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
 
+    floor = Math.floor
+
     class Xorshift
         constructor: ->
             x = 123456789
@@ -14,6 +16,110 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
                 w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
 
                 return w * 2.3283064365386963e-10
+
+    ###
+        Improved Noise reference implementation
+        @url http://mrl.nyu.edu/~perlin/noise/
+        Created by Ken Perlin
+    ###
+    class PerlinNoise
+        constructor: (seed) ->
+            #seed = new Xorshift().random() * 100 if not seed
+            random = new Xorshift().random
+
+            _p = []
+            for i in [0...256]
+                _p[i] = floor random() * 256
+
+            p = new Array 512
+            for i in [0...512]
+                p[i] = _p[i & 255]
+
+            @p = p
+
+        noise: (x, y = 0, z = 0) ->
+            X = floor(x) & 255
+            Y = floor(y) & 255
+            Z = floor(z) & 255
+
+            x -= floor x
+            y -= floor y
+            z -= floor z
+
+            u = @fade x
+            v = @fade y
+            w = @fade z
+
+            p = @p
+
+            A = p[X + 0] + Y; AA = p[A] + Z; AB = p[A + 1] + Z
+            B = p[X + 1] + Y; BA = p[B] + Z; BB = p[B + 1] + Z
+            
+            return @lerp(w, @lerp(v, @lerp(u, @grad(p[AA + 0], x + 0, y + 0, z + 0),
+                                              @grad(p[BA + 0], x - 1, y + 0, z + 0)),
+                                     @lerp(u, @grad(p[AB + 0], x + 0, y - 1, z + 0),
+                                              @grad(p[BB + 0], x - 1, y - 1, z + 0))),
+                            @lerp(v, @lerp(u, @grad(p[AA + 1], x + 0, y + 0, z - 1),
+                                              @grad(p[BA + 1], x - 1, y + 0, z - 1)),
+                                     @lerp(u, @grad(p[AB + 1], x + 0, y - 1, z - 1),
+                                              @grad(p[BB + 1], x - 1, y - 1, z - 1))))
+
+        fade: (t) ->
+            return t * t * t * (t * (t * 6 -15) + 10)
+
+        lerp: (t, a, b) ->
+            return a + t * (b - a)
+
+        grad: (hash, x, y, z) ->
+            h = hash & 15
+            u = if h < 8 then x else y
+            v = if h < 4 then y else if h is 12 or h is 14 then x else z
+            return (if (h & 1) is 0 then u else -u) + (if (h & 2) is 0 then v else -v)
+
+        octaveNoise: (x, args...) ->
+            switch args.length
+                when 1
+                    return @octaveNoise1.apply @, arguments
+                when 2
+                    return @octaveNoise2.apply @, arguments
+                when 3
+                    return @octaveNoise3.apply @, arguments
+
+        octaveNoise1: (x, octaves) ->
+            result = 0.0
+            amp = 1.0
+
+            for i in [0...octaves]
+                result += @noise(x) * amp
+                x *= 2.0
+                amp *= 0.5
+
+            return result
+
+        octaveNoise2: (x, y, octaves) ->
+            result = 0.0
+            amp = 1.0
+
+            for i in [0...octaves]
+                result += @noise(x, y) * amp
+                x *= 2.0
+                y *= 2.0
+                amp *= 0.5
+
+            return result
+
+        octaveNoise3: (x, y, z, octaves) ->
+            result = 0.0
+            amp = 1.0
+
+            for i in [0...octaves]
+                result += @noise(x, y, z) * amp
+                x *= 2.0
+                y *= 2.0
+                z *= 2.0
+                amp *= 0.5
+
+            return result
 
     class Vec3
         constructor: (@x = 0, @y = 0, @z = 0) ->
@@ -341,4 +447,4 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
     exports.M44  = M44
     exports.M22  = M22
     exports.Xorshift = Xorshift
-
+    exports.PerlinNoise = PerlinNoise
