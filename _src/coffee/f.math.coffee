@@ -3,17 +3,28 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
     floor = Math.floor
 
     class Xorshift
-        constructor: ->
+        constructor: (seed = +new Date)->
             x = 123456789
             y = 362436069
             z = 521288629
             w = 88675123
             t = 0
+            vec = [ 1812433254, 3713160357, 3109174145, 64984499 ]
+
+            for i in [0..4]
+                vec[i - 1] = seed = 1812433253 * (seed ^ (seed >> 30)) + i
 
             @random = ->
-                t = x ^ (x << 11)
-                x = y; y = z; z = w;
-                w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
+                t = vec[0]
+                w = vec[3]
+
+                [vec[0], vec[1], vec[2]] = [vec[1], vec[2], w]
+
+                t ^= t << 11
+                t ^= t >> 8
+                w ^= w >> 19
+                w ^= t
+                vec[3] = w
 
                 return w * 2.3283064365386963e-10
 
