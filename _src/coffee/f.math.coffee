@@ -1,4 +1,19 @@
-do (win = window, doc = window.document) ->
+do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
+
+    class Xorshift
+        constructor: ->
+            x = 123456789
+            y = 362436069
+            z = 521288629
+            w = 88675123
+            t = 0
+
+            @random = ->
+                t = x ^ (x << 11)
+                x = y; y = z; z = w;
+                w = (w ^ (w >> 19)) ^ (t ^ (t >> 8))
+
+                return w * 2.3283064365386963e-10
 
     class Vec3
         constructor: (@x = 0, @y = 0, @z = 0) ->
@@ -325,4 +340,5 @@ do (win = window, doc = window.document) ->
     exports.Vec3 = Vec3
     exports.M44  = M44
     exports.M22  = M22
+    exports.Xorshift = Xorshift
 
