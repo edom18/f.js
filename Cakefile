@@ -10,11 +10,11 @@ build = (watch, output = 'js', target = '_src/coffee') ->
     console.log 'Watching coffee scripts'
     console.log "Watch to #{target}"
  
-    options = ['-cb', '-o', output, target]
+    options = ['-cmb', '-o', output, target]
  
 
     if watch is true
-        options[0] = '-cbw'
+        options[0] = '-cmbw'
  
     coffee = spawn 'coffee', options
     coffee.stdout.on 'data', stdout_handler
