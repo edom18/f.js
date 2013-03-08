@@ -7,19 +7,30 @@ var __slice = [].slice;
   floor = Math.floor;
   Xorshift = (function() {
 
-    function Xorshift() {
-      var t, w, x, y, z;
+    function Xorshift(seed) {
+      var i, t, vec, w, x, y, z, _i;
+      if (seed == null) {
+        seed = +(new Date);
+      }
       x = 123456789;
       y = 362436069;
       z = 521288629;
       w = 88675123;
       t = 0;
+      vec = [1812433254, 3713160357, 3109174145, 64984499];
+      for (i = _i = 0; _i <= 4; i = ++_i) {
+        vec[i - 1] = seed = 1812433253 * (seed ^ (seed >> 30)) + i;
+      }
       this.random = function() {
-        t = x ^ (x << 11);
-        x = y;
-        y = z;
-        z = w;
-        w = (w ^ (w >> 19)) ^ (t ^ (t >> 8));
+        var _ref;
+        t = vec[0];
+        w = vec[3];
+        _ref = [vec[1], vec[2], w], vec[0] = _ref[0], vec[1] = _ref[1], vec[2] = _ref[2];
+        t ^= t << 11;
+        t ^= t >> 8;
+        w ^= w >> 19;
+        w ^= t;
+        vec[3] = w;
         return w * 2.3283064365386963e-10;
       };
     }
