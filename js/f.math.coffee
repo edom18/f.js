@@ -11,7 +11,7 @@
 ###
 do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
 
-    {sin, cos, sqrt, pow, atan2, floor, random, PI} = Math
+    {max, min, sin, cos, sqrt, pow, atan2, floor, random, PI} = Math
 
     class Point
         constructor: (@x = 0, @y = 0) ->
@@ -542,10 +542,26 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
         g.clearRect 0, 0, w, h
         g.drawImage cv, 0, 0
 
+
+    # ----------------------------------------------------
+
+    interpolate = (a, b, x) ->
+        f = (1.0 - cos(x * 3.1415927)) * 0.5
+        return a * (1.0 - f) + b * f
+
+    # ----------------------------------------------------
+
+    limit = (val, _min, _max) ->
+        return max(_min, min(val, _max))
+
     # ----------------------------------------------------
     #   EXPORTS to f.math.
     # ----------------------------------------------------
 
+    # methos
+    exports.limit = limit
+
+    # classes
     exports.M44   = M44
     exports.M22   = M22
     exports.Vec3  = Vec3

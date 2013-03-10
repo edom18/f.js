@@ -15,8 +15,8 @@
 var __slice = [].slice;
 
 (function(win, doc, exports) {
-  var M22, M44, MeshMgr, PI, PerlinNoise, Point, Vec3, Vertex, Xorshift, atan2, cos, drawTriangles, floor, pow, random, sin, sqrt;
-  sin = Math.sin, cos = Math.cos, sqrt = Math.sqrt, pow = Math.pow, atan2 = Math.atan2, floor = Math.floor, random = Math.random, PI = Math.PI;
+  var M22, M44, MeshMgr, PI, PerlinNoise, Point, Vec3, Vertex, Xorshift, atan2, cos, drawTriangles, floor, interpolate, limit, max, min, pow, random, sin, sqrt;
+  max = Math.max, min = Math.min, sin = Math.sin, cos = Math.cos, sqrt = Math.sqrt, pow = Math.pow, atan2 = Math.atan2, floor = Math.floor, random = Math.random, PI = Math.PI;
   Point = (function() {
 
     function Point(x, y) {
@@ -609,6 +609,15 @@ var __slice = [].slice;
     g.clearRect(0, 0, w, h);
     return g.drawImage(cv, 0, 0);
   };
+  interpolate = function(a, b, x) {
+    var f;
+    f = (1.0 - cos(x * 3.1415927)) * 0.5;
+    return a * (1.0 - f) + b * f;
+  };
+  limit = function(val, _min, _max) {
+    return max(_min, min(val, _max));
+  };
+  exports.limit = limit;
   exports.M44 = M44;
   exports.M22 = M22;
   exports.Vec3 = Vec3;
