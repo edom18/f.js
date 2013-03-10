@@ -169,6 +169,12 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
             v = if h < 4 then y else if h is 12 or h is 14 then x else z
             return (if (h & 1) is 0 then u else -u) + (if (h & 2) is 0 then v else -v)
 
+        octaves: (octave) ->
+            if octave
+                @octave = octave
+            else
+                @octave
+
         octaveNoise: (x, args...) ->
             switch args.length
                 when 1
