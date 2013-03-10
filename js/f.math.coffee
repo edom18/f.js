@@ -116,8 +116,7 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
         Created by Ken Perlin
     ###
     class PerlinNoise
-        constructor: (seed) ->
-            #seed = new Xorshift().random() * 100 if not seed
+        constructor: (seed, @octave = 1) ->
             random = new Xorshift().random
 
             _p = []
@@ -130,7 +129,7 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
 
             @p = p
 
-        noise: (x, y = 0, z = 0) ->
+        _noise: (x, y = 0, z = 0) ->
             X = floor(x) & 255
             Y = floor(y) & 255
             Z = floor(z) & 255
@@ -175,7 +174,7 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
             else
                 @octave
 
-        octaveNoise: (x, args...) ->
+        noise: (args...) ->
             switch args.length
                 when 1
                     return @octaveNoise1.apply @, arguments
@@ -184,35 +183,35 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
                 when 3
                     return @octaveNoise3.apply @, arguments
 
-        octaveNoise1: (x, octaves) ->
+        octaveNoise1: (x) ->
             result = 0.0
             amp = 1.0
 
-            for i in [0...octaves]
-                result += @noise(x) * amp
+            for i in [0...@octave]
+                result += @_noise(x) * amp
                 x *= 2.0
                 amp *= 0.5
 
             return result
 
-        octaveNoise2: (x, y, octaves) ->
+        octaveNoise2: (x, y) ->
             result = 0.0
             amp = 1.0
 
-            for i in [0...octaves]
-                result += @noise(x, y) * amp
+            for i in [0...@octave]
+                result += @_noise(x, y) * amp
                 x *= 2.0
                 y *= 2.0
                 amp *= 0.5
 
             return result
 
-        octaveNoise3: (x, y, z, octaves) ->
+        octaveNoise3: (x, y, z) ->
             result = 0.0
             amp = 1.0
 
-            for i in [0...octaves]
-                result += @noise(x, y, z) * amp
+            for i in [0...@octave]
+                result += @_noise(x, y, z) * amp
                 x *= 2.0
                 y *= 2.0
                 z *= 2.0

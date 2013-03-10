@@ -155,8 +155,9 @@ var __slice = [].slice;
 
   PerlinNoise = (function() {
 
-    function PerlinNoise(seed) {
+    function PerlinNoise(seed, octave) {
       var i, p, _i, _j, _p;
+      this.octave = octave != null ? octave : 1;
       random = new Xorshift().random;
       _p = [];
       for (i = _i = 0; _i < 256; i = ++_i) {
@@ -169,7 +170,7 @@ var __slice = [].slice;
       this.p = p;
     }
 
-    PerlinNoise.prototype.noise = function(x, y, z) {
+    PerlinNoise.prototype._noise = function(x, y, z) {
       var A, AA, AB, B, BA, BB, X, Y, Z, p, u, v, w;
       if (y == null) {
         y = 0;
@@ -220,9 +221,9 @@ var __slice = [].slice;
       }
     };
 
-    PerlinNoise.prototype.octaveNoise = function() {
-      var args, x;
-      x = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    PerlinNoise.prototype.noise = function() {
+      var args;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       switch (args.length) {
         case 1:
           return this.octaveNoise1.apply(this, arguments);
@@ -233,24 +234,24 @@ var __slice = [].slice;
       }
     };
 
-    PerlinNoise.prototype.octaveNoise1 = function(x, octaves) {
-      var amp, i, result, _i;
+    PerlinNoise.prototype.octaveNoise1 = function(x) {
+      var amp, i, result, _i, _ref;
       result = 0.0;
       amp = 1.0;
-      for (i = _i = 0; 0 <= octaves ? _i < octaves : _i > octaves; i = 0 <= octaves ? ++_i : --_i) {
-        result += this.noise(x) * amp;
+      for (i = _i = 0, _ref = this.octave; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        result += this._noise(x) * amp;
         x *= 2.0;
         amp *= 0.5;
       }
       return result;
     };
 
-    PerlinNoise.prototype.octaveNoise2 = function(x, y, octaves) {
-      var amp, i, result, _i;
+    PerlinNoise.prototype.octaveNoise2 = function(x, y) {
+      var amp, i, result, _i, _ref;
       result = 0.0;
       amp = 1.0;
-      for (i = _i = 0; 0 <= octaves ? _i < octaves : _i > octaves; i = 0 <= octaves ? ++_i : --_i) {
-        result += this.noise(x, y) * amp;
+      for (i = _i = 0, _ref = this.octave; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        result += this._noise(x, y) * amp;
         x *= 2.0;
         y *= 2.0;
         amp *= 0.5;
@@ -258,12 +259,12 @@ var __slice = [].slice;
       return result;
     };
 
-    PerlinNoise.prototype.octaveNoise3 = function(x, y, z, octaves) {
-      var amp, i, result, _i;
+    PerlinNoise.prototype.octaveNoise3 = function(x, y, z) {
+      var amp, i, result, _i, _ref;
       result = 0.0;
       amp = 1.0;
-      for (i = _i = 0; 0 <= octaves ? _i < octaves : _i > octaves; i = 0 <= octaves ? ++_i : --_i) {
-        result += this.noise(x, y, z) * amp;
+      for (i = _i = 0, _ref = this.octave; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        result += this._noise(x, y, z) * amp;
         x *= 2.0;
         y *= 2.0;
         z *= 2.0;
