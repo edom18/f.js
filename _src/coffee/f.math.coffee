@@ -40,6 +40,16 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
         interpolate: (p, x) ->
             Point.interpolate @, p, x
 
+        length: ->
+            sqrt @x * @x + @y * @y
+
+        normalize: ->
+            len = @length()
+            @x = @x / len
+            @y = @y / len
+            return @
+
+
         toString: ->
             "x: #{@x}, y: #{@y}"
 
