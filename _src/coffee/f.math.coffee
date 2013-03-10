@@ -1,6 +1,78 @@
+###
+    @require f.core.js
+
+    Copyright (c) 2012 Kazuya Hiruma
+    Licensed under the MIT License:
+    http://www.opensource.org/licenses/mit-license.php
+
+    @author   Kazuya Hiruma (http://css-eblog.com/)
+    @version  0.0.1
+    @github   https://github.com/edom18/f.js
+###
 do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
 
-    floor = Math.floor
+    {sin, cos, sqrt, pow, atan2, floor, random, PI} = Math
+
+    class Point
+        constructor: (@x = 0, @y = 0) ->
+
+        add: (p) ->
+            Point.add @, p
+
+        subtract: (p) ->
+            Point.subtract @, p
+
+        equals: (p) ->
+            Point.equals @, p
+
+        angles: ->
+            Point.angles @
+
+        distance: (p) ->
+            Point.distance @, p
+
+        dot: (p) ->
+            Point.dot @, p
+
+        cross: (p) ->
+            Point.cross @, p
+
+        interpolate: (p, x) ->
+            Point.interpolate @, p, x
+
+        toString: ->
+            "x: #{@x}, y: #{@y}"
+
+        @add: (p1, p2) ->
+            new Point p1.x + p2.x, p1.y + p2.y
+
+        @subtract: (p1, p2) ->
+            new Point p1.x - p2.x, p1.y - p2.y
+
+        @equals: (p1, p2) ->
+            (p1.x is p2.x and p1.y is p2.y)
+
+        @angles: (p) ->
+            atan2 p.y, p.x
+
+        @distance: (p1, p2) ->
+            dx = p1.x - p2.x
+            dy = p1.y - p2.y
+            sqrt dx * dx + dy * dy
+
+        @dot: (p1, p2) ->
+            p1.x * p2.x + p1.y * p2.y
+
+        @cross: (p1, p2) ->
+            p1.x * p2.y - p1.y * p2.x
+
+        @interpolate: (p1, p2, x) ->
+            a = p2.x - p1.x
+            b = p2.y - p1.y
+            f = (1.0 - cos(x * 3.1415927)) * 0.5
+            return a * (1.0 - f) + b * f
+
+    # ---------------------------------------------------------
 
     class Xorshift
         constructor: (seed = +new Date)->
@@ -454,8 +526,13 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
         g.clearRect 0, 0, w, h
         g.drawImage cv, 0, 0
 
-    exports.Vec3 = Vec3
-    exports.M44  = M44
-    exports.M22  = M22
-    exports.Xorshift = Xorshift
+    # ----------------------------------------------------
+    #   EXPORTS to f.math.
+    # ----------------------------------------------------
+
+    exports.M44   = M44
+    exports.M22   = M22
+    exports.Vec3  = Vec3
+    exports.Point = Point
+    exports.Xorshift    = Xorshift
     exports.PerlinNoise = PerlinNoise
