@@ -56,6 +56,18 @@ var __slice = [].slice;
       return Point.interpolate(this, p, x);
     };
 
+    Point.prototype.length = function() {
+      return sqrt(this.x * this.x + this.y * this.y);
+    };
+
+    Point.prototype.normalize = function() {
+      var len;
+      len = this.length();
+      this.x = this.x / len;
+      this.y = this.y / len;
+      return this;
+    };
+
     Point.prototype.toString = function() {
       return "x: " + this.x + ", y: " + this.y;
     };
@@ -198,6 +210,14 @@ var __slice = [].slice;
       u = h < 8 ? x : y;
       v = h < 4 ? y : h === 12 || h === 14 ? x : z;
       return ((h & 1) === 0 ? u : -u) + ((h & 2) === 0 ? v : -v);
+    };
+
+    PerlinNoise.prototype.octaves = function(octave) {
+      if (octave) {
+        return this.octave = octave;
+      } else {
+        return this.octave;
+      }
     };
 
     PerlinNoise.prototype.octaveNoise = function() {
