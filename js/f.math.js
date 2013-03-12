@@ -37,7 +37,7 @@ var __slice = [].slice;
     };
 
     Point.prototype.angle = function() {
-      return Point.angles(this);
+      return Point.angle(this);
     };
 
     Point.prototype.distance = function(p) {

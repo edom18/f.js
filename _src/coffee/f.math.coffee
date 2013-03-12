@@ -26,7 +26,7 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
             Point.equals @, p
 
         angle: ->
-            Point.angles @
+            Point.angle @
 
         distance: (p) ->
             Point.distance @, p
