@@ -43,12 +43,11 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
         length: ->
             sqrt @x * @x + @y * @y
 
-        normalize: ->
+        normalize: (tick = 1) ->
             len = @length()
-            @x = @x / len
-            @y = @y / len
+            @x = @x / len * tick
+            @y = @y / len * tick
             return @
-
 
         toString: ->
             "x: #{@x}, y: #{@y}"
@@ -418,8 +417,8 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
             out._11 = @_22 / det
             out._22 = @_11 / det
 
-            out._12 = @_12 / det
-            out._21 = @_21 / det
+            out._12 = -@_12 / det
+            out._21 = -@_21 / det
 
             return out
 

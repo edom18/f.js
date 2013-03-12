@@ -25,7 +25,7 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
         equals: (p) ->
             Point.equals @, p
 
-        angles: ->
+        angle: ->
             Point.angles @
 
         distance: (p) ->
@@ -43,12 +43,11 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
         length: ->
             sqrt @x * @x + @y * @y
 
-        normalize: ->
+        normalize: (tick = 1) ->
             len = @length()
-            @x = @x / len
-            @y = @y / len
+            @x = @x / len * tick
+            @y = @y / len * tick
             return @
-
 
         toString: ->
             "x: #{@x}, y: #{@y}"
@@ -62,7 +61,7 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
         @equals: (p1, p2) ->
             (p1.x is p2.x and p1.y is p2.y)
 
-        @angles: (p) ->
+        @angle: (p) ->
             atan2 p.y, p.x
 
         @distance: (p1, p2) ->
@@ -418,8 +417,8 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
             out._11 = @_22 / det
             out._22 = @_11 / det
 
-            out._12 = @_12 / det
-            out._21 = @_21 / det
+            out._12 = -@_12 / det
+            out._21 = -@_21 / det
 
             return out
 

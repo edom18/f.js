@@ -36,7 +36,7 @@ var __slice = [].slice;
       return Point.equals(this, p);
     };
 
-    Point.prototype.angles = function() {
+    Point.prototype.angle = function() {
       return Point.angles(this);
     };
 
@@ -60,11 +60,14 @@ var __slice = [].slice;
       return sqrt(this.x * this.x + this.y * this.y);
     };
 
-    Point.prototype.normalize = function() {
+    Point.prototype.normalize = function(tick) {
       var len;
+      if (tick == null) {
+        tick = 1;
+      }
       len = this.length();
-      this.x = this.x / len;
-      this.y = this.y / len;
+      this.x = this.x / len * tick;
+      this.y = this.y / len * tick;
       return this;
     };
 
@@ -84,7 +87,7 @@ var __slice = [].slice;
       return p1.x === p2.x && p1.y === p2.y;
     };
 
-    Point.angles = function(p) {
+    Point.angle = function(p) {
       return atan2(p.y, p.x);
     };
 
@@ -495,8 +498,8 @@ var __slice = [].slice;
       }
       out._11 = this._22 / det;
       out._22 = this._11 / det;
-      out._12 = this._12 / det;
-      out._21 = this._21 / det;
+      out._12 = -this._12 / det;
+      out._21 = -this._21 / det;
       return out;
     };
 
