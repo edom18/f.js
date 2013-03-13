@@ -116,7 +116,7 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
     ###
     class PerlinNoise
         constructor: (seed, @octave = 1) ->
-            random = new Xorshift().random
+            random = new Xorshift(seed).random
 
             _p = []
             for i in [0...256]

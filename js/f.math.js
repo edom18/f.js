@@ -161,7 +161,7 @@ var __slice = [].slice;
     function PerlinNoise(seed, octave) {
       var i, p, _i, _j, _p;
       this.octave = octave != null ? octave : 1;
-      random = new Xorshift().random;
+      random = new Xorshift(seed).random;
       _p = [];
       for (i = _i = 0; _i < 256; i = ++_i) {
         _p[i] = floor(random() * 256);
