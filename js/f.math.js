@@ -15,7 +15,7 @@
 var __slice = [].slice;
 
 (function(win, doc, exports) {
-  var M22, M44, MeshMgr, PI, PerlinNoise, Point, Vec3, Vertex, Xorshift, atan2, cos, drawTriangles, floor, interpolate, limit, max, min, pow, random, sin, sqrt;
+  var M22, M44, MeshMgr, PI, PerlinNoise, Point, Vec3, Vertex, XorEnc, Xorshift, atan2, cos, drawTriangles, floor, interpolate, limit, max, min, pow, random, sin, sqrt;
   max = Math.max, min = Math.min, sin = Math.sin, cos = Math.cos, sqrt = Math.sqrt, pow = Math.pow, atan2 = Math.atan2, floor = Math.floor, random = Math.random, PI = Math.PI;
   Point = (function() {
 
@@ -115,6 +115,34 @@ var __slice = [].slice;
     };
 
     return Point;
+
+  })();
+  XorEnc = (function() {
+
+    function XorEnc(seed) {
+      this.seed = seed != null ? seed : '123456789';
+    }
+
+    XorEnc.prototype.encode = function(str) {
+      var i, ret, _i, _ref;
+      ret = [];
+      for (i = _i = 0, _ref = url.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        ret.push(url.charCodeAt(i) ^ this.seed);
+      }
+      return ret;
+    };
+
+    XorEnc.prototype.decode = function(encArr) {
+      var a, ret, _i, _len;
+      ret = '';
+      for (_i = 0, _len = encArr.length; _i < _len; _i++) {
+        a = encArr[_i];
+        ret += String.fromCharCode(a ^ this.seed);
+      }
+      return ret;
+    };
+
+    return XorEnc;
 
   })();
   Xorshift = (function() {
@@ -626,6 +654,7 @@ var __slice = [].slice;
   exports.M22 = M22;
   exports.Vec3 = Vec3;
   exports.Point = Point;
+  exports.XorEnc = XorEnc;
   exports.Xorshift = Xorshift;
   return exports.PerlinNoise = PerlinNoise;
 })(window, window.document, f.math || (f.math = {}));

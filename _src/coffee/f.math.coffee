@@ -82,6 +82,20 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
             return a * (1.0 - f) + b * f
 
     # ---------------------------------------------------------
+    
+    class XorEnc
+        constructor: (@seed = '123456789') ->
+        encode: (str) ->
+            ret = []
+            ret.push(url.charCodeAt(i) ^ @seed) for i in [0...url.length]
+            return ret
+            
+        decode: (encArr) ->
+            ret = ''
+            ret += String.fromCharCode(a ^ @seed) for a in encArr
+            return ret
+
+    # ---------------------------------------------------------
 
     class Xorshift
         constructor: (seed = +new Date)->
@@ -564,5 +578,6 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
     exports.M22   = M22
     exports.Vec3  = Vec3
     exports.Point = Point
+    exports.XorEnc = XorEnc
     exports.Xorshift    = Xorshift
     exports.PerlinNoise = PerlinNoise
