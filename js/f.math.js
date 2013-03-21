@@ -15,7 +15,7 @@
 var __slice = [].slice;
 
 (function(win, doc, exports) {
-  var M22, M44, MeshMgr, PI, PerlinNoise, Point, Vec3, Vertex, XorEnc, Xorshift, atan2, cos, drawTriangles, floor, interpolate, limit, max, min, pow, random, sin, sqrt;
+  var M22, M44, MeshMgr, PI, PerlinNoise, Point, Vector3, Vertex, XorEnc, Xorshift, atan2, cos, drawTriangles, floor, interpolate, limit, max, min, pow, random, sin, sqrt;
   max = Math.max, min = Math.min, sin = Math.sin, cos = Math.cos, sqrt = Math.sqrt, pow = Math.pow, atan2 = Math.atan2, floor = Math.floor, random = Math.random, PI = Math.PI;
   Point = (function() {
 
@@ -307,44 +307,44 @@ var __slice = [].slice;
     return PerlinNoise;
 
   })();
-  Vec3 = (function() {
+  Vector3 = (function() {
 
-    function Vec3(x, y, z) {
+    function Vector3(x, y, z) {
       this.x = x != null ? x : 0;
       this.y = y != null ? y : 0;
       this.z = z != null ? z : 0;
     }
 
-    Vec3.prototype.zero = function() {
+    Vector3.prototype.zero = function() {
       return this.x = this.y = this.z = 0;
     };
 
-    Vec3.prototype.sub = function(v) {
+    Vector3.prototype.sub = function(v) {
       this.x -= v.x;
       this.y -= v.y;
       this.z -= v.z;
       return this;
     };
 
-    Vec3.prototype.add = function(v) {
+    Vector3.prototype.add = function(v) {
       this.x += v.x;
       this.y += v.y;
       this.z += v.z;
       return this;
     };
 
-    Vec3.prototype.copyFrom = function(v) {
+    Vector3.prototype.copy = function(v) {
       this.x = v.x;
       this.y = v.y;
       this.z = v.z;
       return this;
     };
 
-    Vec3.prototype.norm = function() {
+    Vector3.prototype.norm = function() {
       return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     };
 
-    Vec3.prototype.normalize = function() {
+    Vector3.prototype.normalize = function() {
       var nrm;
       nrm = this.norm();
       if (nrm !== 0) {
@@ -355,36 +355,59 @@ var __slice = [].slice;
       return this;
     };
 
-    Vec3.prototype.smul = function(k) {
-      this.x *= k;
-      this.y *= k;
-      this.z *= k;
+    Vector3.prototype.multiply = function(v) {
+      this.x *= v.x;
+      this.y *= v.y;
+      this.z *= v.z;
       return this;
     };
 
-    Vec3.prototype.dpWith = function(v) {
+    Vector3.prototype.multiplyScalar = function(s) {
+      this.x *= s;
+      this.y *= s;
+      this.z *= s;
+      return this;
+    };
+
+    Vector3.prototype.multiplyVectors = function(a, b) {
+      this.x = a.x * b.x;
+      this.y = a.y * b.y;
+      return this.z = a.z * b.z;
+    };
+
+    Vector3.prototype.dot = function(v) {
       return this.x * v.x + this.y * v.y + this.z * v.z;
     };
 
-    Vec3.prototype.cp = function(v, w) {
+    Vector3.prototype.cross = function(v, w) {
+      if (w) {
+        return this.crossVector(v, w);
+      }
+      this.x = (this.y * v.z) - (this.z * v.y);
+      this.y = (this.z * v.x) - (this.x * v.z);
+      this.z = (this.x * v.y) - (this.y * v.x);
+      return this;
+    };
+
+    Vector3.prototype.crossVector = function(v, w) {
       this.x = (w.y * v.z) - (w.z * v.y);
       this.y = (w.z * v.x) - (w.x * v.z);
       this.z = (w.x * v.y) - (w.y * v.x);
       return this;
     };
 
-    Vec3.prototype.toString = function() {
+    Vector3.prototype.toString = function() {
       return "" + this.x + "," + this.y + "," + this.z;
     };
 
-    return Vec3;
+    return Vector3;
 
   })();
   M44 = (function() {
 
     function M44(cpy) {
-      if (cpy != null) {
-        this.copyFrom(cpy);
+      if (cpy) {
+        this.copy(cpy);
       } else {
         this.ident();
       }
@@ -399,7 +422,7 @@ var __slice = [].slice;
       return this;
     };
 
-    M44.prototype.copyFrom = function(m) {
+    M44.prototype.copy = function(m) {
       this._11 = m._11;
       this._12 = m._12;
       this._13 = m._13;

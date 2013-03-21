@@ -25,8 +25,8 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
         equals: (p) ->
             Point.equals @, p
 
-        angles: ->
-            Point.angles @
+        angle: ->
+            Point.angle @
 
         distance: (p) ->
             Point.distance @, p
@@ -61,7 +61,7 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
         @equals: (p1, p2) ->
             (p1.x is p2.x and p1.y is p2.y)
 
-        @angles: (p) ->
+        @angle: (p) ->
             atan2 p.y, p.x
 
         @distance: (p1, p2) ->
@@ -80,6 +80,20 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
             b = p2.y - p1.y
             f = (1.0 - cos(x * 3.1415927)) * 0.5
             return a * (1.0 - f) + b * f
+
+    # ---------------------------------------------------------
+    
+    class XorEnc
+        constructor: (@seed = '123456789') ->
+        encode: (str) ->
+            ret = []
+            ret.push(url.charCodeAt(i) ^ @seed) for i in [0...url.length]
+            return ret
+            
+        decode: (encArr) ->
+            ret = ''
+            ret += String.fromCharCode(a ^ @seed) for a in encArr
+            return ret
 
     # ---------------------------------------------------------
 
@@ -116,7 +130,7 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
     ###
     class PerlinNoise
         constructor: (seed, @octave = 1) ->
-            random = new Xorshift().random
+            random = new Xorshift(seed).random
 
             _p = []
             for i in [0...256]
@@ -218,7 +232,7 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
 
             return result
 
-    class Vec3
+    class Vector3
         constructor: (@x = 0, @y = 0, @z = 0) ->
         zero: ->
             @x = @y = @z = 0;
@@ -235,7 +249,7 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
             @z += v.z
             return @
 
-        copyFrom: (v) ->
+        copy: (v) ->
             @x = v.x
             @y = v.y
             @z = v.z
@@ -253,22 +267,46 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
 
             return @
 
-        #scalar multiplication
-        smul: (k) ->
-            @x *= k
-            @y *= k
-            @z *= k
+
+        multiply: (v) ->
+            @x *= v.x
+            @y *= v.y
+            @z *= v.z
+
             return @
 
+        #scalar multiplication
+        multiplyScalar: (s) ->
+            @x *= s
+            @y *= s
+            @z *= s
+            return @
+
+        multiplyVectors: (a, b) ->
+            @x = a.x * b.x
+            @y = a.y * b.y
+            @z = a.z * b.z
+
         #dot product
-        dpWith: (v) ->
-            @x * v.x + @y * v.y + @z * v.z
+        dot: (v) ->
+            return @x * v.x + @y * v.y + @z * v.z
+
+        cross: (v, w) ->
+
+            return @crossVector(v, w) if w
+
+            @x = (@y * v.z) - (@z * v.y)
+            @y = (@z * v.x) - (@x * v.z)
+            @z = (@x * v.y) - (@y * v.x)
+
+            return @
 
         #cross product
-        cp: (v, w) ->
+        crossVector: (v, w) ->
             @x = (w.y * v.z) - (w.z * v.y)
             @y = (w.z * v.x) - (w.x * v.z)
             @z = (w.x * v.y) - (w.y * v.x)
+
             return @
 
         toString: ->
@@ -278,42 +316,30 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
 
     class M44
         constructor: (cpy)->
-            if cpy?
-                @copyFrom(cpy)
-            else
-                @ident()
+            if cpy then @copy(cpy) else @ident()
 
         ident: ->
-            @_12 = @_13 = @_14 = 0
 
+            #As result like this
+            #|1 0 0 0|
+            #|0 1 0 0|
+            #|0 0 1 0|
+            #|0 0 0 1|
+
+            @_12 = @_13 = @_14 = 0
             @_21 = @_23 = @_24 = 0
             @_31 = @_32 = @_34 = 0
             @_41 = @_42 = @_43 = 0
-
             @_11 = @_22 = @_33 = @_44 = 1
 
             return @
 
-        copyFrom: (m) ->
-            @_11 = m._11
-            @_12 = m._12
-            @_13 = m._13
-            @_14 = m._14
+        copy: (m) ->
 
-            @_21 = m._21
-            @_22 = m._22
-            @_23 = m._23
-            @_24 = m._24
-
-            @_31 = m._31
-            @_32 = m._32
-            @_33 = m._33
-            @_34 = m._34
-
-            @_41 = m._41
-            @_42 = m._42
-            @_43 = m._43
-            @_44 = m._44
+            @_11 = m._11; @_12 = m._12; @_13 = m._13; @_14 = m._14
+            @_21 = m._21; @_22 = m._22; @_23 = m._23; @_24 = m._24
+            @_31 = m._31; @_32 = m._32; @_33 = m._33; @_34 = m._34
+            @_41 = m._41; @_42 = m._42; @_43 = m._43; @_44 = m._44
 
             return @
 
@@ -346,6 +372,13 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
 
         #multiplication
         mul: (A, B) ->
+
+            #|A1, A2, A3, A4|   |B1, B2, B3, B4|   |C1, C2, C3, C4|
+            #|A1, A2, A3, A4|   |B1, B2, B3, B4|   |C1, C2, C3, C4|
+            #|A1, A2, A3, A4| x |B1, B2, B3, B4| = |C1, C2, C3, C4|
+            #|A1, A2, A3, A4|   |B1, B2, B3, B4|   |C1, C2, C3, C4|
+            #|A1, A2, A3, A4|   |B1, B2, B3, B4|   |C1, C2, C3, C4|
+
             @_11 = A._11 * B._11 + A._12 * B._21 + A._13 * B._31 + A._14 * B._41
             @_12 = A._11 * B._12 + A._12 * B._22 + A._13 * B._32 + A._14 * B._42
             @_13 = A._11 * B._13 + A._12 * B._23 + A._13 * B._33 + A._14 * B._43
@@ -369,14 +402,28 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
             return @
 
         translate: (x, y, z) ->
+
+            #As result like this
+            #|1 0 0 x|
+            #|0 1 0 y|
+            #|0 0 1 z|
+            #|0 0 0 1|
+
             @_11 = 1; @_12 = 0; @_13 = 0; @_14 = 0;
             @_21 = 0; @_22 = 1; @_23 = 0; @_24 = 0;
             @_31 = 0; @_32 = 0; @_33 = 1; @_34 = 0;
-
             @_41 = x; @_42 = y; @_43 = z; @_44 = 1;
+
             return @
 
         rotX: (r) ->
+
+            #As result like this
+            #|1       0      0 0|
+            #|0  cos(r) sin(r) 0|
+            #|0 -sin(r) cos(r) 0|
+            #|0       0      0 1|
+            
             @_22 = Math.cos(r)
             @_23 = Math.sin(r)
             @_32 = -@_23
@@ -388,6 +435,13 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
             return @
 
         rotY: (r) ->
+
+            #As result like this
+            #|cos(r)  0 -sin(r) 0|
+            #|     0  1       0 0|
+            #|sin(r)  0  cos(r) 0|
+            #|     0  0       0 1|
+
             @_11 = Math.cos(r)
             @_13 = Math.sin(r)
             @_31 = -@_13
@@ -564,5 +618,6 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
     exports.M22   = M22
     exports.Vec3  = Vec3
     exports.Point = Point
+    exports.XorEnc = XorEnc
     exports.Xorshift    = Xorshift
     exports.PerlinNoise = PerlinNoise
