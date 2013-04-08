@@ -614,10 +614,10 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
     exports.limit = limit
 
     # classes
-    exports.M44   = M44
-    exports.M22   = M22
-    exports.Vec3  = Vec3
-    exports.Point = Point
+    exports.M44    = M44
+    exports.M22    = M22
+    exports.Vecor3 = Vecor3
+    exports.Point  = Point
     exports.XorEnc = XorEnc
     exports.Xorshift    = Xorshift
     exports.PerlinNoise = PerlinNoise
