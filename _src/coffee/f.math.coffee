@@ -616,7 +616,7 @@ do (win = window, doc = window.document, exports = (f.math or (f.math = {}))) ->
     # classes
     exports.M44    = M44
     exports.M22    = M22
-    exports.Vecor3 = Vecor3
+    exports.Vector3 = Vector3
     exports.Point  = Point
     exports.XorEnc = XorEnc
     exports.Xorshift    = Xorshift
